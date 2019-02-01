@@ -1,0 +1,1661 @@
+{
+  "0x0000": {
+    "Id": 0,
+    "Category": "GPS",
+    "Name": "GPSVersionID",
+    "Description":  "Version of the Global Positioning Systems (GPS) IFD, given as 2.0.0.0. This tag is mandatory when the GpsIFD tag is present. When the version is 2.0.0.0, the tag value is 0x02000000.",
+    "DataType": 7
+  },
+  "0x0001": {
+    "Id": 1,
+    "Category": "GPS",
+    "Name": "GPSLatitudeRef",
+    "Description":  "Indicates whether the latitude is north or south latitude. The ASCII value \u0027N\u0027 indicates north latitude, and \u0027S\u0027 is south latitude.",
+    "DataType": 7
+  },
+  "0x0002": {
+    "Id": 2,
+    "Category": "GPS",
+    "Name": "GPSLatitude",
+    "Description":  "Indicates the latitude. The latitude is expressed as three RATIONAL values giving the degrees, minutes, and seconds, respectively. When degrees, minutes and seconds are expressed, the format is dd/1,mm/1,ss/1. When degrees and minutes are used and, for example, fractions of minutes are given up to two decimal places, the format is dd/1,mmmm/100,0/1.",
+    "DataType": 7
+  },
+  "0x0003": {
+    "Id": 3,
+    "Category": "GPS",
+    "Name": "GPSLongitudeRef",
+    "Description":  "Indicates whether the longitude is east or west longitude. The ASCII value \u0027E\u0027 indicates east longitude, and \u0027W\u0027 is west longitude.",
+    "DataType": 7
+  },
+  "0x0004": {
+    "Id": 4,
+    "Category": "GPS",
+    "Name": "GPSLongitude",
+    "Description":  "Indicates the longitude. The longitude is expressed as three RATIONAL values giving the degrees, minutes, and seconds, respectively. When degrees, minutes and seconds are expressed, the format is ddd/1,mm/1,ss/1. When degrees and minutes are used and, for example, fractions of minutes are given up to two decimal places, the format is ddd/1,mmmm/100,0/1.",
+    "DataType": 7
+  },
+  "0x0005": {
+    "Id": 5,
+    "Category": "GPS",
+    "Name": "GPSAltitudeRef",
+    "Description":  "Reference altitude, in meters.",
+    "DataType": 7
+  },
+  "0x0006": {
+    "Id": 6,
+    "Category": "GPS",
+    "Name": "GPSAltitude",
+    "Description":  "Altitude, in meters, based on the reference altitude specified by GpsAltitudeRef.",
+    "DataType": 7
+  },
+  "0x0007": {
+    "Id": 7,
+    "Category": "GPS",
+    "Name": "GPSTimeStamp",
+    "Description":  "Time as coordinated universal time (UTC). The value is expressed as three rational numbers that give the hour, minute, and second.",
+    "DataType": 7
+  },
+  "0x0008": {
+    "Id": 8,
+    "Category": "GPS",
+    "Name": "GpsSatellites",
+    "Description":  "Specifies the GPS satellites used for measurements. This tag can be used to specify the ID number, angle of elevation, azimuth, SNR, and other information about each satellite. The format is not specified. If the GPS receiver is incapable of taking measurements, the value of the tag must be set to NULL.",
+    "DataType": 7
+  },
+  "0x0009": {
+    "Id": 9,
+    "Category": "GPS",
+    "Name": "GpsStatus",
+    "Description":  "Specifies the status of the GPS receiver when the image is recorded. \u0027A\u0027 means measurement is in progress, and \u0027V\u0027 means the measurement is Interoperability.",
+    "DataType": 7
+  },
+  "0x000A": {
+    "Id": 10,
+    "Category": "GPS",
+    "Name": "GpsMeasureMode",
+    "Description":  "Specifies the GPS measurement mode. 2 specifies 2-D measurement, and 3 specifies 3-D measurement.",
+    "DataType": 7
+  },
+  "0x000B": {
+    "Id": 11,
+    "Category": "GPS",
+    "Name": "GpsDop",
+    "Description":  "GPS DOP (data degree of precision). An HDOP value is written during 2-D measurement, and a PDOP value is written during 3-D measurement.",
+    "DataType": 7
+  },
+  "0x000C": {
+    "Id": 12,
+    "Category": "GPS",
+    "Name": "GPSSpeedRef",
+    "Description":  "Specifies the unit used to express the GPS receiver speed of movement. K , M , and N represent kilometers per hour, miles per hour, and knots respectively.",
+    "DataType": 7
+  },
+  "0x000D": {
+    "Id": 13,
+    "Category": "GPS",
+    "Name": "GPSSpeed",
+    "Description":  "Speed of the GPS receiver movement.",
+    "DataType": 7
+  },
+  "0x000E": {
+    "Id": 14,
+    "Category": "GPS",
+    "Name": "GPSTrackRef",
+    "Description":  "Specifies the reference for giving the direction of GPS receiver movement. T specifies true direction, and M specifies magnetic direction.",
+    "DataType": 7
+  },
+  "0x000F": {
+    "Id": 15,
+    "Category": "GPS",
+    "Name": "GPSTrack",
+    "Description":  "Direction of GPS receiver movement. The range of values is from 0.00 to 359.99.",
+    "DataType": 7
+  },
+  "0x0010": {
+    "Id": 16,
+    "Category": "GPS",
+    "Name": "GPSImgDirRef",
+    "Description":  "Specifies the reference for the direction of the image when it is captured. T specifies true direction, and M specifies magnetic direction.",
+    "DataType": 7
+  },
+  "0x0011": {
+    "Id": 17,
+    "Category": "GPS",
+    "Name": "GPSImgDir",
+    "Description":  "Direction of the image when it was captured. The range of values is from 0.00 to 359.99.",
+    "DataType": 7
+  },
+  "0x0012": {
+    "Id": 18,
+    "Category": "GPS",
+    "Name": "GPSMapDatum",
+    "Description":  "Indicates the geodetic survey data used by the GPS receiver. If the survey data is restricted to Japan, the value of this tag is \u0027TOKYO\u0027 or \u0027WGS-84\u0027.",
+    "DataType": 7
+  },
+  "0x0013": {
+    "Id": 19,
+    "Category": "GPS",
+    "Name": "GPSDestLatRef",
+    "Description":  "Specifies whether the latitude of the destination point is north or south latitude. N specifies north latitude, and S specifies south latitude.",
+    "DataType": 7
+  },
+  "0x0014": {
+    "Id": 20,
+    "Category": "GPS",
+    "Name": "GPSDestLat",
+    "Description":  "Latitude of the destination point. The latitude is expressed as three rational values giving the degrees, minutes, and seconds respectively. When degrees, minutes, and seconds are expressed, the format is dd/1, mm/1, ss/1. When degrees and minutes are used and, for example, fractions of minutes are given up to two decimal places, the format is dd/1, mmmm/100, 0/1.",
+    "DataType": 7
+  },
+  "0x0015": {
+    "Id": 21,
+    "Category": "GPS",
+    "Name": "GPSDestLongRef",
+    "Description":  "Specifies whether the longitude of the destination point is east or west longitude. E specifies east longitude, and W specifies west longitude.",
+    "DataType": 7
+  },
+  "0x0016": {
+    "Id": 22,
+    "Category": "GPS",
+    "Name": "GPSDestLong",
+    "Description":  "Longitude of the destination point. The longitude is expressed as three rational values giving the degrees, minutes, and seconds respectively. When degrees, minutes, and seconds are expressed, the format is ddd/1, mm/1, ss/1. When degrees and minutes are used and, for example, fractions of minutes are given up to two decimal places, the format is ddd/1, mmmm/100, 0/1.",
+    "DataType": 7
+  },
+  "0x0017": {
+    "Id": 23,
+    "Category": "GPS",
+    "Name": "GPSDestBearRef",
+    "Description":  "Specifies the reference used for giving the bearing to the destination point. T specifies true direction, and M specifies magnetic direction.",
+    "DataType": 7
+  },
+  "0x0018": {
+    "Id": 24,
+    "Category": "GPS",
+    "Name": "GPSDestBear",
+    "Description":  "Bearing to the destination point. The range of values is from 0.00 to 359.99.",
+    "DataType": 7
+  },
+  "0x0019": {
+    "Id": 25,
+    "Category": "GPS",
+    "Name": "GPSDestDistRef",
+    "Description":  "Specifies the unit used to express the distance to the destination point. \u0027K\u0027, \u0027M\u0027, and \u0027N\u0027 represent kilometers, miles, and knots respectively.",
+    "DataType": 7
+  },
+  "0x001A": {
+    "Id": 26,
+    "Category": "GPS",
+    "Name": "GPSDestDist",
+    "Description":  "Distance to the destination point.",
+    "DataType": 7
+  },
+  "0x00FE": {
+    "Id": 254,
+    "Category": "",
+    "Name": "NewSubfileType",
+    "Description":  "Type of data in a subfile.",
+    "DataType": 7
+  },
+  "0x00FF": {
+    "Id": 255,
+    "Category": "",
+    "Name": "SubfileType",
+    "Description":  "Type of data in a subfile.",
+    "DataType": 7
+  },
+  "0x0100": {
+    "Id": 256,
+    "Category": "",
+    "Name": "ImageWidth",
+    "Description":  "Number of pixels per row.",
+    "DataType": 7
+  },
+  "0x0101": {
+    "Id": 257,
+    "Category": "",
+    "Name": "ImageHeight",
+    "Description":  "Number of pixel rows.",
+    "DataType": 7
+  },
+  "0x0102": {
+    "Id": 258,
+    "Category": "",
+    "Name": "BitsPerSample",
+    "Description":  "Number of bits per color component.",
+    "DataType": 7
+  },
+  "0x0103": {
+    "Id": 259,
+    "Category": "",
+    "Name": "Compression",
+    "Description":  "Compression scheme used for the image data.",
+    "DataType": 7
+  },
+  "0x0106": {
+    "Id": 262,
+    "Category": "",
+    "Name": "PhotometricInterp",
+    "Description":  "How pixel data will be interpreted.",
+    "DataType": 7
+  },
+  "0x0107": {
+    "Id": 263,
+    "Category": "",
+    "Name": "ThreshHolding",
+    "Description":  "Technique used to convert from gray pixels to black and white pixels.",
+    "DataType": 7
+  },
+  "0x0108": {
+    "Id": 264,
+    "Category": "",
+    "Name": "CellWidth",
+    "Description":  "Width of the dithering or halftoning matrix.",
+    "DataType": 7
+  },
+  "0x0109": {
+    "Id": 265,
+    "Category": "",
+    "Name": "CellHeight",
+    "Description":  "Height of the dithering or halftoning matrix.",
+    "DataType": 7
+  },
+  "0x010A": {
+    "Id": 266,
+    "Category": "",
+    "Name": "FillOrder",
+    "Description":  "Logical order of bits in a byte.",
+    "DataType": 7
+  },
+  "0x010D": {
+    "Id": 269,
+    "Category": "",
+    "Name": "DocumentName",
+    "Description":  "Null-terminated character string that specifies the name of the document from which the image was scanned.",
+    "DataType": 7
+  },
+  "0x010E": {
+    "Id": 270,
+    "Category": "Description",
+    "Name": "ImageDescription",
+    "Description":  "Null-terminated character string that specifies the title of the image.",
+    "DataType": 2
+  },
+  "0x010F": {
+    "Id": 271,
+    "Category": "Origin",
+    "Name": "EquipMake",
+    "Description":  "Null-terminated character string that specifies the manufacturer of the equipment used to record the image.",
+    "DataType": 2
+  },
+  "0x0110": {
+    "Id": 272,
+    "Category": "Origin",
+    "Name": "EquipModel",
+    "Description":  "Null-terminated character string that specifies the model name or model number of the equipment used to record the image.",
+    "DataType": 2
+  },
+  "0x0111": {
+    "Id": 273,
+    "Category": "",
+    "Name": "StripOffsets",
+    "Description":  "For each strip, the byte offset of that strip.",
+    "DataType": 7
+  },
+  "0x0112": {
+    "Id": 274,
+    "Category": "Image",
+    "Name": "Orientation",
+    "Description":  "Image orientation viewed in terms of rows and columns.",
+    "DataType": 3
+  },
+  "0x0115": {
+    "Id": 277,
+    "Category": "",
+    "Name": "SamplesPerPixel",
+    "Description":  "Number of color components per pixel.",
+    "DataType": 7
+  },
+  "0x0116": {
+    "Id": 278,
+    "Category": "",
+    "Name": "RowsPerStrip",
+    "Description":  "Number of rows per strip.",
+    "DataType": 7
+  },
+  "0x0117": {
+    "Id": 279,
+    "Category": "",
+    "Name": "StripBytesCount",
+    "Description":  "For each strip, the total number of bytes in that strip.",
+    "DataType": 7
+  },
+  "0x0118": {
+    "Id": 280,
+    "Category": "",
+    "Name": "MinSampleValue",
+    "Description":  "For each color component, the minimum value assigned to that component.",
+    "DataType": 7
+  },
+  "0x0119": {
+    "Id": 281,
+    "Category": "",
+    "Name": "MaxSampleValue",
+    "Description":  "For each color component, the maximum value assigned to that component.",
+    "DataType": 7
+  },
+  "0x011A": {
+    "Id": 282,
+    "Category": "Image",
+    "Name": "XResolution",
+    "Description":  "Number of pixels per unit in the image width (x) direction. The unit is specified by ResolutionUnit.",
+    "DataType": 5
+  },
+  "0x011B": {
+    "Id": 283,
+    "Category": "Image",
+    "Name": "YResolution",
+    "Description":  "Number of pixels per unit in the image height (y) direction. The unit is specified by ResolutionUnit.",
+    "DataType": 5
+  },
+  "0x011C": {
+    "Id": 284,
+    "Category": "",
+    "Name": "PlanarConfig",
+    "Description":  "Whether pixel components are recorded in chunky or planar format.",
+    "DataType": 7
+  },
+  "0x011D": {
+    "Id": 285,
+    "Category": "",
+    "Name": "PageName",
+    "Description":  "Null-terminated character string that specifies the name of the page from which the image was scanned.",
+    "DataType": 7
+  },
+  "0x011E": {
+    "Id": 286,
+    "Category": "",
+    "Name": "XPosition",
+    "Description":  "Offset from the left side of the page to the left side of the image. The unit of measure is specified by ResolutionUnit.",
+    "DataType": 7
+  },
+  "0x011F": {
+    "Id": 287,
+    "Category": "",
+    "Name": "YPosition",
+    "Description":  "Offset from the top of the page to the top of the image. The unit of measure is specified by ResolutionUnit.",
+    "DataType": 7
+  },
+  "0x0120": {
+    "Id": 288,
+    "Category": "",
+    "Name": "FreeOffset",
+    "Description":  "For each string of contiguous unused bytes, the byte offset of that string.",
+    "DataType": 7
+  },
+  "0x0121": {
+    "Id": 289,
+    "Category": "",
+    "Name": "FreeByteCounts",
+    "Description":  "For each string of contiguous unused bytes, the number of bytes in that string.",
+    "DataType": 7
+  },
+  "0x0122": {
+    "Id": 290,
+    "Category": "",
+    "Name": "GrayResponseUnit",
+    "Description":  "Precision of the number specified by GrayResponseCurve. 1 specifies tenths, 2 specifies hundredths, 3 specifies thousandths, and so on.",
+    "DataType": 7
+  },
+  "0x0123": {
+    "Id": 291,
+    "Category": "",
+    "Name": "GrayResponseCurve",
+    "Description":  "For each possible pixel value in a grayscale image, the optical density of that pixel value.",
+    "DataType": 7
+  },
+  "0x0124": {
+    "Id": 292,
+    "Category": "",
+    "Name": "T4Option",
+    "Description":  "Set of flags that relate to T4 encoding.",
+    "DataType": 7
+  },
+  "0x0125": {
+    "Id": 293,
+    "Category": "",
+    "Name": "T6Option",
+    "Description":  "Set of flags that relate to T6 encoding.",
+    "DataType": 7
+  },
+  "0x0128": {
+    "Id": 296,
+    "Category": "Image",
+    "Name": "ResolutionUnit",
+    "Description":  "Unit of measure for the horizontal resolution and the vertical resolution.",
+    "DataType": 3
+  },
+  "0x0129": {
+    "Id": 297,
+    "Category": "",
+    "Name": "PageNumber",
+    "Description":  "Page number of the page from which the image was scanned.",
+    "DataType": 7
+  },
+  "0x012D": {
+    "Id": 301,
+    "Category": "",
+    "Name": "TransferFunction",
+    "Description":  "Tables that specify transfer functions for the image.",
+    "DataType": 7
+  },
+  "0x0131": {
+    "Id": 305,
+    "Category": "Origin",
+    "Name": "SoftwareUsed",
+    "Description":  "Null-terminated character string that specifies the name and version of the software or firmware of the device used to generate the image.",
+    "DataType": 2
+  },
+  "0x0132": {
+    "Id": 306,
+    "Category": "Origin",
+    "Name": "DateTime",
+    "Description":  "Date and time the image was created.",
+    "DataType": 2
+  },
+  "0x013B": {
+    "Id": 315,
+    "Category": "Origin",
+    "Name": "Artist",
+    "Description":  "Null-terminated character string that specifies the name of the person who created the image.",
+    "DataType": 2
+  },
+  "0x013C": {
+    "Id": 316,
+    "Category": "Origin",
+    "Name": "HostComputer",
+    "Description":  "Null-terminated character string that specifies the computer and/or operating system used to create the image.",
+    "DataType": 7
+  },
+  "0x013D": {
+    "Id": 317,
+    "Category": "",
+    "Name": "Predictor",
+    "Description":  "Type of prediction scheme that was applied to the image data before the encoding scheme was applied.",
+    "DataType": 7
+  },
+  "0x013E": {
+    "Id": 318,
+    "Category": "",
+    "Name": "WhitePoint",
+    "Description":  "Chromaticity of the white point of the image.",
+    "DataType": 7
+  },
+  "0x013F": {
+    "Id": 319,
+    "Category": "",
+    "Name": "PrimaryChromaticities",
+    "Description":  "For each of the three primary colors in the image, the chromaticity of that color.",
+    "DataType": 7
+  },
+  "0x0140": {
+    "Id": 320,
+    "Category": "",
+    "Name": "ColorMap",
+    "Description":  "Color palette (lookup table) for a palette-indexed image.",
+    "DataType": 7
+  },
+  "0x0141": {
+    "Id": 321,
+    "Category": "",
+    "Name": "HalftoneHints",
+    "Description":  "Information used by the halftone function",
+    "DataType": 7
+  },
+  "0x0142": {
+    "Id": 322,
+    "Category": "",
+    "Name": "TileWidth",
+    "Description":  "Number of pixel columns in each tile.",
+    "DataType": 7
+  },
+  "0x0143": {
+    "Id": 323,
+    "Category": "",
+    "Name": "TileLength",
+    "Description":  "Number of pixel rows in each tile.",
+    "DataType": 7
+  },
+  "0x0144": {
+    "Id": 324,
+    "Category": "",
+    "Name": "TileOffset",
+    "Description":  "For each tile, the byte offset of that tile.",
+    "DataType": 7
+  },
+  "0x0145": {
+    "Id": 325,
+    "Category": "",
+    "Name": "TileByteCounts",
+    "Description":  "For each tile, the number of bytes in that tile.",
+    "DataType": 7
+  },
+  "0x014C": {
+    "Id": 332,
+    "Category": "",
+    "Name": "InkSet",
+    "Description":  "Set of inks used in a separated image.",
+    "DataType": 7
+  },
+  "0x014D": {
+    "Id": 333,
+    "Category": "",
+    "Name": "InkNames",
+    "Description":  "Sequence of concatenated, null-terminated, character strings that specify the names of the inks used in a separated image.",
+    "DataType": 7
+  },
+  "0x014E": {
+    "Id": 334,
+    "Category": "",
+    "Name": "NumberOfInks",
+    "Description":  "Number of inks.",
+    "DataType": 7
+  },
+  "0x0150": {
+    "Id": 336,
+    "Category": "",
+    "Name": "DotRange",
+    "Description":  "Color component values that correspond to a 0 percent dot and a 100 percent dot.",
+    "DataType": 7
+  },
+  "0x0151": {
+    "Id": 337,
+    "Category": "",
+    "Name": "TargetPrinter",
+    "Description":  "Null-terminated character string that describes the intended printing environment.",
+    "DataType": 7
+  },
+  "0x0152": {
+    "Id": 338,
+    "Category": "",
+    "Name": "ExtraSamples",
+    "Description":  "Number of extra color components. For example, one extra component might hold an alpha value.",
+    "DataType": 7
+  },
+  "0x0153": {
+    "Id": 339,
+    "Category": "",
+    "Name": "SampleFormat",
+    "Description":  "For each color component, the numerical format (unsigned, signed, floating point) of that component.",
+    "DataType": 7
+  },
+  "0x0154": {
+    "Id": 340,
+    "Category": "",
+    "Name": "SMinSampleValue",
+    "Description":  "For each color component, the minimum value of that component.",
+    "DataType": 7
+  },
+  "0x0155": {
+    "Id": 341,
+    "Category": "",
+    "Name": "SMaxSampleValue",
+    "Description":  "For each color component, the maximum value of that component.",
+    "DataType": 7
+  },
+  "0x0156": {
+    "Id": 342,
+    "Category": "",
+    "Name": "TransferRange",
+    "Description":  "Table of values that extends the range of the transfer function.",
+    "DataType": 7
+  },
+  "0x0200": {
+    "Id": 512,
+    "Category": "JPEG",
+    "Name": "Proc",
+    "Description":  "JPEG compression process.",
+    "DataType": 7
+  },
+  "0x0201": {
+    "Id": 513,
+    "Category": "JPEG",
+    "Name": "InterchangeFormat",
+    "Description":  "Offset to the start of a JPEG bitstream.",
+    "DataType": 4
+  },
+  "0x0202": {
+    "Id": 514,
+    "Category": "JPEG",
+    "Name": "InterchangeLength",
+    "Description":  "Length, in bytes, of the JPEG bitstream.",
+    "DataType": 4
+  },
+  "0x0203": {
+    "Id": 515,
+    "Category": "JPEG",
+    "Name": "RestartInterval",
+    "Description":  "Length of the restart interval.",
+    "DataType": 7
+  },
+  "0x0205": {
+    "Id": 517,
+    "Category": "JPEG",
+    "Name": "LosslessPredictors",
+    "Description":  "For each color component, a lossless predictor-selection value for that component.",
+    "DataType": 7
+  },
+  "0x0206": {
+    "Id": 518,
+    "Category": "JPEG",
+    "Name": "PointTransforms",
+    "Description":  "For each color component, a point transformation value for that component.",
+    "DataType": 7
+  },
+  "0x0207": {
+    "Id": 519,
+    "Category": "JPEG",
+    "Name": "QTables",
+    "Description":  "For each color component, the offset to the quantization table for that component.",
+    "DataType": 7
+  },
+  "0x0208": {
+    "Id": 520,
+    "Category": "JPEG",
+    "Name": "DCTables",
+    "Description":  "For each color component, the offset to the DC Huffman table (or lossless Huffman table) for that component.",
+    "DataType": 7
+  },
+  "0x0209": {
+    "Id": 521,
+    "Category": "JPEG",
+    "Name": "ACTables",
+    "Description":  "For each color component, the offset to the AC Huffman table for that component.",
+    "DataType": 7
+  },
+  "0x0211": {
+    "Id": 529,
+    "Category": "EXIF",
+    "Name": "YCbCrCoefficients",
+    "Description":  "Coefficients for transformation from RGB to YCbCr image data.",
+    "DataType": 7
+  },
+  "0x0212": {
+    "Id": 530,
+    "Category": "EXIF",
+    "Name": "YCbCrSubsampling",
+    "Description":  "Sampling ratio of chrominance components in relation to the luminance component.",
+    "DataType": 7
+  },
+  "0x0213": {
+    "Id": 531,
+    "Category": "EXIF",
+    "Name": "YCbCrPositioning",
+    "Description":  "Position of chrominance components in relation to the luminance component.",
+    "DataType": 3
+  },
+  "0x0214": {
+    "Id": 532,
+    "Category": "EXIF",
+    "Name": "REFBlackWhite",
+    "Description":  "Reference black point value and reference white point value.",
+    "DataType": 7
+  },
+  "0x0301": {
+    "Id": 769,
+    "Category": "",
+    "Name": "Gamma",
+    "Description":  "Gamma value attached to the image. The gamma value is stored as a rational number (pair of long) with a numerator of 100000. For example, a gamma value of 2.2 is stored as the pair (100000, 45455).",
+    "DataType": 7
+  },
+  "0x0302": {
+    "Id": 770,
+    "Category": "",
+    "Name": "ICCProfileDescriptor",
+    "Description":  "Null-terminated character string that identifies an ICC profile.",
+    "DataType": 7
+  },
+  "0x0303": {
+    "Id": 771,
+    "Category": "",
+    "Name": "SRGBRenderingIntent",
+    "Description":  "How the image should be displayed as defined by the International Color Consortium (ICC).",
+    "DataType": 7
+  },
+  "0x0320": {
+    "Id": 800,
+    "Category": "",
+    "Name": "ImageTitle",
+    "Description":  "Null-terminated character string that specifies the title of the image.",
+    "DataType": 7
+  },
+  "0x4746": {
+    "Id": 18246,
+    "Category": "Description",
+    "Name": "StarRating",
+    "Description":  "Star rating",
+    "DataType": 3
+  },
+  "0x4749": {
+    "Id": 18249,
+    "Category": "Description",
+    "Name": "PercentRating",
+    "Description":  "Percent rating",
+    "DataType": 3
+  },
+  "0x5001": {
+    "Id": 20481,
+    "Category": "",
+    "Name": "ResolutionXUnit",
+    "Description":  "Units in which to display horizontal resolution.",
+    "DataType": 7
+  },
+  "0x5002": {
+    "Id": 20482,
+    "Category": "",
+    "Name": "ResolutionYUnit",
+    "Description":  "Units in which to display vertical resolution.",
+    "DataType": 7
+  },
+  "0x5003": {
+    "Id": 20483,
+    "Category": "",
+    "Name": "ResolutionXLengthUnit",
+    "Description":  "Units in which to display the image width.",
+    "DataType": 7
+  },
+  "0x5004": {
+    "Id": 20484,
+    "Category": "",
+    "Name": "ResolutionYLengthUnit",
+    "Description":  "Units in which to display the image height.",
+    "DataType": 7
+  },
+  "0x5005": {
+    "Id": 20485,
+    "Category": "",
+    "Name": "PrintFlags",
+    "Description":  "Sequence of one-byte Boolean values that specify printing options.",
+    "DataType": 7
+  },
+  "0x5006": {
+    "Id": 20486,
+    "Category": "",
+    "Name": "PrintFlagsVersion",
+    "Description":  "Print flags version.",
+    "DataType": 7
+  },
+  "0x5007": {
+    "Id": 20487,
+    "Category": "",
+    "Name": "PrintFlagsCrop",
+    "Description":  "Print flags center crop marks.",
+    "DataType": 7
+  },
+  "0x5008": {
+    "Id": 20488,
+    "Category": "",
+    "Name": "PrintFlagsBleedWidth",
+    "Description":  "Print flags bleed width.",
+    "DataType": 7
+  },
+  "0x5009": {
+    "Id": 20489,
+    "Category": "",
+    "Name": "PrintFlagsBleedWidthScale",
+    "Description":  "Print flags bleed width scale.",
+    "DataType": 7
+  },
+  "0x500A": {
+    "Id": 20490,
+    "Category": "",
+    "Name": "HalftoneLPI",
+    "Description":  "Ink\u0027s screen frequency, in lines per inch.",
+    "DataType": 7
+  },
+  "0x500B": {
+    "Id": 20491,
+    "Category": "",
+    "Name": "HalftoneLPIUnit",
+    "Description":  "Units for the screen frequency.",
+    "DataType": 7
+  },
+  "0x500C": {
+    "Id": 20492,
+    "Category": "",
+    "Name": "HalftoneDegree",
+    "Description":  "Angle for screen.",
+    "DataType": 7
+  },
+  "0x500D": {
+    "Id": 20493,
+    "Category": "",
+    "Name": "HalftoneShape",
+    "Description":  "Shape of the halftone dots.",
+    "DataType": 7
+  },
+  "0x500E": {
+    "Id": 20494,
+    "Category": "",
+    "Name": "HalftoneMisc",
+    "Description":  "Miscellaneous halftone information.",
+    "DataType": 7
+  },
+  "0x500F": {
+    "Id": 20495,
+    "Category": "",
+    "Name": "HalftoneScreen",
+    "Description":  "Boolean value that specifies whether to use the printer\u0027s default screens.",
+    "DataType": 7
+  },
+  "0x5010": {
+    "Id": 20496,
+    "Category": "",
+    "Name": "JPEGQuality",
+    "Description":  "Private tag used by the Adobe Photoshop format. Not for public use.",
+    "DataType": 7
+  },
+  "0x5011": {
+    "Id": 20497,
+    "Category": "",
+    "Name": "GridSize",
+    "Description":  "Block of information about grids and guides.",
+    "DataType": 7
+  },
+  "0x5012": {
+    "Id": 20498,
+    "Category": "Thumbnail",
+    "Name": "Format",
+    "Description":  "Format of the thumbnail image.",
+    "DataType": 7
+  },
+  "0x5013": {
+    "Id": 20499,
+    "Category": "Thumbnail",
+    "Name": "Width",
+    "Description":  "Width, in pixels, of the thumbnail image.",
+    "DataType": 7
+  },
+  "0x5014": {
+    "Id": 20500,
+    "Category": "Thumbnail",
+    "Name": "Height",
+    "Description":  "Height, in pixels, of the thumbnail image.",
+    "DataType": 7
+  },
+  "0x5015": {
+    "Id": 20501,
+    "Category": "Thumbnail",
+    "Name": "ColorDepth",
+    "Description":  "bits per pixel (BPP) for the thumbnail image.",
+    "DataType": 7
+  },
+  "0x5016": {
+    "Id": 20502,
+    "Category": "Thumbnail",
+    "Name": "Planes",
+    "Description":  "Number of color planes for the thumbnail image.",
+    "DataType": 7
+  },
+  "0x5017": {
+    "Id": 20503,
+    "Category": "Thumbnail",
+    "Name": "RawBytes",
+    "Description":  "Byte offset between rows of pixel data.",
+    "DataType": 7
+  },
+  "0x5018": {
+    "Id": 20504,
+    "Category": "Thumbnail",
+    "Name": "Size",
+    "Description":  "Total size, in bytes, of the thumbnail image.",
+    "DataType": 7
+  },
+  "0x5019": {
+    "Id": 20505,
+    "Category": "Thumbnail",
+    "Name": "CompressedSize",
+    "Description":  "Compressed size, in bytes, of the thumbnail image.",
+    "DataType": 7
+  },
+  "0x501A": {
+    "Id": 20506,
+    "Category": "",
+    "Name": "ColorTransferFunction",
+    "Description":  "Table of values that specify color transfer functions.",
+    "DataType": 7
+  },
+  "0x501B": {
+    "Id": 20507,
+    "Category": "Thumbnail",
+    "Name": "Data",
+    "Description":  "Raw thumbnail bits in JPEG or RGB format. Depends on ThumbnailFormat.",
+    "DataType": 1
+  },
+  "0x5020": {
+    "Id": 20512,
+    "Category": "Thumbnail",
+    "Name": "ImageWidth",
+    "Description":  "Number of pixels per row in the thumbnail image.",
+    "DataType": 4
+  },
+  "0x5021": {
+    "Id": 20513,
+    "Category": "Thumbnail",
+    "Name": "ImageHeight",
+    "Description":  "Number of pixel rows in the thumbnail image.",
+    "DataType": 4
+  },
+  "0x5022": {
+    "Id": 20514,
+    "Category": "Thumbnail",
+    "Name": "BitsPerSample",
+    "Description":  "Number of bits per color component in the thumbnail image.",
+    "DataType": 7
+  },
+  "0x5023": {
+    "Id": 20515,
+    "Category": "Thumbnail",
+    "Name": "Compression",
+    "Description":  "Compression scheme used for thumbnail image data.",
+    "DataType": 3
+  },
+  "0x5024": {
+    "Id": 20516,
+    "Category": "Thumbnail",
+    "Name": "PhotometricInterp",
+    "Description":  "How thumbnail pixel data will be interpreted.",
+    "DataType": 7
+  },
+  "0x5025": {
+    "Id": 20517,
+    "Category": "Thumbnail",
+    "Name": "ImageDescription",
+    "Description":  "Null-terminated character string that specifies the title of the image.",
+    "DataType": 7
+  },
+  "0x5026": {
+    "Id": 20518,
+    "Category": "Thumbnail",
+    "Name": "EquipMake",
+    "Description":  "Null-terminated character string that specifies the manufacturer of the equipment used to record the thumbnail image.",
+    "DataType": 7
+  },
+  "0x5027": {
+    "Id": 20519,
+    "Category": "Thumbnail",
+    "Name": "EquipModel",
+    "Description":  "Null-terminated character string that specifies the model name or model number of the equipment used to record the thumbnail image.",
+    "DataType": 7
+  },
+  "0x5028": {
+    "Id": 20520,
+    "Category": "Thumbnail",
+    "Name": "StripOffsets",
+    "Description":  "For each strip in the thumbnail image, the byte offset of that strip.",
+    "DataType": 7
+  },
+  "0x5029": {
+    "Id": 20521,
+    "Category": "Thumbnail",
+    "Name": "Orientation",
+    "Description":  "Thumbnail image orientation in terms of rows and columns.",
+    "DataType": 3
+  },
+  "0x502A": {
+    "Id": 20522,
+    "Category": "Thumbnail",
+    "Name": "SamplesPerPixel",
+    "Description":  "Number of color components per pixel in the thumbnail image.",
+    "DataType": 7
+  },
+  "0x502B": {
+    "Id": 20523,
+    "Category": "Thumbnail",
+    "Name": "RowsPerStrip",
+    "Description":  "Number of rows per strip in the thumbnail image.",
+    "DataType": 7
+  },
+  "0x502C": {
+    "Id": 20524,
+    "Category": "Thumbnail",
+    "Name": "StripBytesCount",
+    "Description":  "For each thumbnail image strip, the total number of bytes in that strip.",
+    "DataType": 7
+  },
+  "0x502D": {
+    "Id": 20525,
+    "Category": "Thumbnail",
+    "Name": "ResolutionX",
+    "Description":  "Thumbnail resolution in the width direction. The resolution unit is given in ThumbnailResolutionUnit.",
+    "DataType": 5
+  },
+  "0x502E": {
+    "Id": 20526,
+    "Category": "Thumbnail",
+    "Name": "ResolutionY",
+    "Description":  "Thumbnail resolution in the height direction. The resolution unit is given in ThumbnailResolutionUnit.",
+    "DataType": 5
+  },
+  "0x502F": {
+    "Id": 20527,
+    "Category": "Thumbnail",
+    "Name": "PlanarConfig",
+    "Description":  "Whether pixel components in the thumbnail image are recorded in chunky or planar format.",
+    "DataType": 7
+  },
+  "0x5030": {
+    "Id": 20528,
+    "Category": "Thumbnail",
+    "Name": "ResolutionUnit",
+    "Description":  "Unit of measure for the horizontal resolution and the vertical resolution of the thumbnail image.",
+    "DataType": 3
+  },
+  "0x5031": {
+    "Id": 20529,
+    "Category": "Thumbnail",
+    "Name": "TransferFunction",
+    "Description":  "Tables that specify transfer functions for the thumbnail image.",
+    "DataType": 7
+  },
+  "0x5032": {
+    "Id": 20530,
+    "Category": "Thumbnail",
+    "Name": "SoftwareUsed",
+    "Description":  "Null-terminated character string that specifies the name and version of the software or firmware of the device used to generate the thumbnail image.",
+    "DataType": 7
+  },
+  "0x5033": {
+    "Id": 20531,
+    "Category": "Thumbnail",
+    "Name": "DateTime",
+    "Description":  "Date and time the thumbnail image was created.",
+    "DataType": 7
+  },
+  "0x5034": {
+    "Id": 20532,
+    "Category": "Thumbnail",
+    "Name": "Artist",
+    "Description":  "Null-terminated character string that specifies the name of the person who created the thumbnail image.",
+    "DataType": 7
+  },
+  "0x5035": {
+    "Id": 20533,
+    "Category": "Thumbnail",
+    "Name": "WhitePoint",
+    "Description":  "Chromaticity of the white point of the thumbnail image.",
+    "DataType": 7
+  },
+  "0x5036": {
+    "Id": 20534,
+    "Category": "Thumbnail",
+    "Name": "PrimaryChromaticities",
+    "Description":  "For each of the three primary colors in the thumbnail image, the chromaticity of that color.",
+    "DataType": 7
+  },
+  "0x5037": {
+    "Id": 20535,
+    "Category": "Thumbnail",
+    "Name": "YCbCrCoefficients",
+    "Description":  "Coefficients for transformation from RGB to YCbCr data for the thumbnail image.",
+    "DataType": 7
+  },
+  "0x5038": {
+    "Id": 20536,
+    "Category": "Thumbnail",
+    "Name": "YCbCrSubsampling",
+    "Description":  "Sampling ratio of chrominance components in relation to the luminance component for the thumbnail image.",
+    "DataType": 7
+  },
+  "0x5039": {
+    "Id": 20537,
+    "Category": "Thumbnail",
+    "Name": "YCbCrPositioning",
+    "Description":  "Position of chrominance components in relation to the luminance component for the thumbnail image.",
+    "DataType": 7
+  },
+  "0x503A": {
+    "Id": 20538,
+    "Category": "Thumbnail",
+    "Name": "RefBlackWhite",
+    "Description":  "Reference black point value and reference white point value for the thumbnail image.",
+    "DataType": 7
+  },
+  "0x503B": {
+    "Id": 20539,
+    "Category": "Thumbnail",
+    "Name": "CopyRight",
+    "Description":  "Null-terminated character string that contains copyright information for the thumbnail image.",
+    "DataType": 7
+  },
+  "0x5041": {
+    "Id": 20545,
+    "Category": "",
+    "Name": "InteroperabilityIndex",
+    "Description":  "",
+    "DataType": 7
+  },
+  "0x5042": {
+    "Id": 20546,
+    "Category": "",
+    "Name": "ExifInteroperabilityVersion",
+    "Description":  "",
+    "DataType": 258
+  },
+  "0x5090": {
+    "Id": 20624,
+    "Category": "JPEG",
+    "Name": "LuminanceTable",
+    "Description":  "Luminance table. The luminance table and the chrominance table are used to control JPEG quality. A valid luminance or chrominance table has 64 entries of type Short. If an image has either a luminance table or a chrominance table, then it must have both tables.",
+    "DataType": 3
+  },
+  "0x5091": {
+    "Id": 20625,
+    "Category": "JPEG",
+    "Name": "ChrominanceTable",
+    "Description":  "Chrominance table. The luminance table and the chrominance table are used to control JPEG quality. A valid luminance or chrominance table has 64 entries of type Short. If an image has either a luminance table or a chrominance table, then it must have both tables.",
+    "DataType": 3
+  },
+  "0x5100": {
+    "Id": 20736,
+    "Category": "",
+    "Name": "FrameDelay",
+    "Description":  "Time delay, in hundredths of a second, between two frames in an animated GIF image.",
+    "DataType": 7
+  },
+  "0x5101": {
+    "Id": 20737,
+    "Category": "",
+    "Name": "LoopCount",
+    "Description":  "For an animated GIF image, the number of times to display the animation. A value of 0 specifies that the animation should be displayed infinitely.",
+    "DataType": 7
+  },
+  "0x5110": {
+    "Id": 20752,
+    "Category": "",
+    "Name": "PixelUnit",
+    "Description":  "Unit for PixelPerUnitX and PixelPerUnitY.",
+    "DataType": 7
+  },
+  "0x5111": {
+    "Id": 20753,
+    "Category": "",
+    "Name": "PixelPerUnitX",
+    "Description":  "Pixels per unit in the x direction.",
+    "DataType": 7
+  },
+  "0x5112": {
+    "Id": 20754,
+    "Category": "",
+    "Name": "PixelPerUnitY",
+    "Description":  "Pixels per unit in the y direction.",
+    "DataType": 7
+  },
+  "0x5113": {
+    "Id": 20755,
+    "Category": "",
+    "Name": "PaletteHistogram",
+    "Description":  "Palette histogram.",
+    "DataType": 7
+  },
+  "0x8298": {
+    "Id": 33432,
+    "Category": "Origin",
+    "Name": "Copyright",
+    "Description":  "Null-terminated character string that contains copyright information.",
+    "DataType": 2
+  },
+  "0x829A": {
+    "Id": 33434,
+    "Category": "EXIF",
+    "Name": "ExposureTime",
+    "Description":  "Exposure time, measured in seconds.",
+    "DataType": 5
+  },
+  "0x829D": {
+    "Id": 33437,
+    "Category": "EXIF",
+    "Name": "FNumber",
+    "Description":  "F number.",
+    "DataType": 5
+  },
+  "0x8769": {
+    "Id": 34665,
+    "Category": "EXIF",
+    "Name": "IFD",
+    "Description":  "Private tag used by GDI+. Not for public use. GDI+ uses this tag to locate Exif-specific information.",
+    "DataType": 7
+  },
+  "0x8773": {
+    "Id": 34675,
+    "Category": "",
+    "Name": "ICCProfile",
+    "Description":  "ICC profile embedded in the image.",
+    "DataType": 7
+  },
+  "0x8822": {
+    "Id": 34850,
+    "Category": "EXIF",
+    "Name": "ExposureProg",
+    "Description":  "Class of the program used by the camera to set exposure when the picture is taken.",
+    "DataType": 3
+  },
+  "0x8824": {
+    "Id": 34852,
+    "Category": "EXIF",
+    "Name": "SpectralSense",
+    "Description":  "Null-terminated character string that specifies the spectral sensitivity of each channel of the camera used. The string is compatible with the standard developed by the ASTM Technical Committee.",
+    "DataType": 7
+  },
+  "0x8825": {
+    "Id": 34853,
+    "Category": "",
+    "Name": "GpsIFD",
+    "Description":  "Offset to a block of GPS property items. Property items whose tags have the prefix Gps are stored in the GPS block. The GPS property items are defined in the EXIF specification. GDI+ uses this tag to locate GPS information, but GDI+ does not expose this tag for public use.",
+    "DataType": 7
+  },
+  "0x8827": {
+    "Id": 34855,
+    "Category": "EXIF",
+    "Name": "ISOSpeed",
+    "Description":  "ISO speed and ISO latitude of the camera or input device as specified in ISO 12232.",
+    "DataType": 3
+  },
+  "0x8828": {
+    "Id": 34856,
+    "Category": "EXIF",
+    "Name": "OECF",
+    "Description":  "Optoelectronic conversion function (OECF) specified in ISO 14524. The OECF is the relationship between the camera optical input and the image values.",
+    "DataType": 7
+  },
+  "0x9000": {
+    "Id": 36864,
+    "Category": "EXIF",
+    "Name": "Ver",
+    "Description":  "Version of the EXIF standard supported. Nonexistence of this field is taken to mean nonconformance to the standard. Conformance to the standard is indicated by recording 0210 as a 4-byte ASCII string. Because the type is Undefined, there is no NULL terminator.",
+    "DataType": 7
+  },
+  "0x9003": {
+    "Id": 36867,
+    "Category": "EXIF",
+    "Name": "DTOrig",
+    "Description":  "Date and time when the original image data was generated. For a DSC, the date and time when the picture was taken. The format is YYYY:MM:DD HH:MM:SS with time shown in 24-hour format and the date and time separated by one blank character (0x2000). The character string length is 20 bytes including the NULL terminator. When the field is empty, it is treated as unknown.",
+    "DataType": 2
+  },
+  "0x9004": {
+    "Id": 36868,
+    "Category": "EXIF",
+    "Name": "DTDigitized",
+    "Description":  "Date and time when the image was stored as digital data. If, for example, an image was captured by DSC and at the same time the file was recorded, then DateTimeOriginal and DateTimeDigitized will have the same contents. The format is YYYY:MM:DD HH:MM:SS with time shown in 24-hour format and the date and time separated by one blank character (0x2000). The character string length is 20 bytes including the NULL terminator. When the field is empty, it is treated as unknown.",
+    "DataType": 2
+  },
+  "0x9101": {
+    "Id": 37121,
+    "Category": "EXIF",
+    "Name": "CompConfig",
+    "Description":  "Information specific to compressed data. The channels of each component are arranged in order from the first component to the fourth. For uncompressed data, the data arrangement is given in the PhotometricInterp tag. However, because PhotometricInterp can only express the order of Y, Cb, and Cr, this tag is provided for cases when compressed data uses components other than Y, Cb, and Cr and to support other sequences.",
+    "DataType": 7
+  },
+  "0x9102": {
+    "Id": 37122,
+    "Category": "EXIF",
+    "Name": "CompBPP",
+    "Description":  "Information specific to compressed data. The compression mode used for a compressed image is indicated in unit BPP.",
+    "DataType": 7
+  },
+  "0x9201": {
+    "Id": 37377,
+    "Category": "EXIF",
+    "Name": "ShutterSpeed",
+    "Description":  "Shutter speed. The unit is the Additive System of Photographic Exposure (APEX) value.",
+    "DataType": 10
+  },
+  "0x9202": {
+    "Id": 37378,
+    "Category": "EXIF",
+    "Name": "Aperture",
+    "Description":  "Lens aperture. The unit is the Additive System of Photographic Exposure (APEX) value.",
+    "DataType": 5
+  },
+  "0x9203": {
+    "Id": 37379,
+    "Category": "EXIF",
+    "Name": "Brightness",
+    "Description":  "Brightness value. The unit is the Additive System of Photographic Exposure (APEX) value. Ordinarily it is given in the range of -99.99 to 99.99.",
+    "DataType": 10
+  },
+  "0x9204": {
+    "Id": 37380,
+    "Category": "EXIF",
+    "Name": "ExposureBias",
+    "Description":  "Exposure bias. The unit is the Additive System of Photographic Exposure (APEX) value. Ordinarily it is given in the range -99.99 to 99.99.",
+    "DataType": 10
+  },
+  "0x9205": {
+    "Id": 37381,
+    "Category": "EXIF",
+    "Name": "MaxAperture",
+    "Description":  "Smallest F number of the lens. The unit is the Additive System of Photographic Exposure (APEX) value. Ordinarily it is given in the range of 00.00 to 99.99, but it is not limited to this range.",
+    "DataType": 5
+  },
+  "0x9206": {
+    "Id": 37382,
+    "Category": "EXIF",
+    "Name": "SubjectDist",
+    "Description":  "Distance to the subject, measured in meters.",
+    "DataType": 7
+  },
+  "0x9207": {
+    "Id": 37383,
+    "Category": "EXIF",
+    "Name": "MeteringMode",
+    "Description":  "Metering mode.",
+    "DataType": 3
+  },
+  "0x9208": {
+    "Id": 37384,
+    "Category": "EXIF",
+    "Name": "LightSource",
+    "Description":  "Type of light source.",
+    "DataType": 7
+  },
+  "0x9209": {
+    "Id": 37385,
+    "Category": "EXIF",
+    "Name": "Flash",
+    "Description":  "Flash status. This tag is recorded when an image is taken using a strobe light (flash). Bit 0 indicates the flash firing status, and bits 1 and 2 indicate the flash return status.",
+    "DataType": 3
+  },
+  "0x920A": {
+    "Id": 37386,
+    "Category": "EXIF",
+    "Name": "FocalLength",
+    "Description":  "Actual focal length, in millimeters, of the lens. Conversion is not made to the focal length of a 35 millimeter film camera.",
+    "DataType": 5
+  },
+  "0x9213": {
+    "Id": 37395,
+    "Category": "Origin",
+    "Name": "ImageHistory",
+    "Description":  "Record of what has been done to the image.",
+    "DataType": 2
+  },
+  "0x927C": {
+    "Id": 37500,
+    "Category": "EXIF",
+    "Name": "MakerNote",
+    "Description":  "Note tag. A tag used by manufacturers of EXIF writers to record information. The contents are up to the manufacturer.",
+    "DataType": 7
+  },
+  "0x9286": {
+    "Id": 37510,
+    "Category": "Description",
+    "Name": "UserComment",
+    "Description":  "Comment tag. A tag used by EXIF users to write keywords or comments about the image besides those in ImageDescription and without the character-code limitations of the ImageDescription tag.",
+    "DataType": 2
+  },
+  "0x9290": {
+    "Id": 37520,
+    "Category": "EXIF",
+    "Name": "DTSubsec",
+    "Description":  "Null-terminated character string that specifies a fraction of a second for the DateTime tag.",
+    "DataType": 2
+  },
+  "0x9291": {
+    "Id": 37521,
+    "Category": "EXIF",
+    "Name": "DTOrigSS",
+    "Description":  "Null-terminated character string that specifies a fraction of a second for the ExifDTOrig tag.",
+    "DataType": 2
+  },
+  "0x9292": {
+    "Id": 37522,
+    "Category": "EXIF",
+    "Name": "DTDigSS",
+    "Description":  "Null-terminated character string that specifies a fraction of a second for the ExifDTDigitized tag.",
+    "DataType": 2
+  },
+  "0x9C9B": {
+    "Id": 40091,
+    "Category": "Description",
+    "Name": "XPTitle",
+    "Description":  "Title tag used by Windows, encoded in UCS2",
+    "DataType": 257
+  },
+  "0x9C9C": {
+    "Id": 40092,
+    "Category": "Description",
+    "Name": "XPComment",
+    "Description":  "Comment tag used by Windows, encoded in UCS2",
+    "DataType": 257
+  },
+  "0x9C9D": {
+    "Id": 40093,
+    "Category": "Description",
+    "Name": "XPAuthor",
+    "Description":  "Author tag used by Windows, encoded in UCS2",
+    "DataType": 257
+  },
+  "0x9C9E": {
+    "Id": 40094,
+    "Category": "Description",
+    "Name": "XPKeywords",
+    "Description":  "Keywords tag used by Windows, encoded in UCS2",
+    "DataType": 257
+  },
+  "0x9C9F": {
+    "Id": 40095,
+    "Category": "Description",
+    "Name": "XPSubject",
+    "Description":  "Subject tag used by Windows, encoded in UCS2",
+    "DataType": 257
+  },
+  "0xA000": {
+    "Id": 40960,
+    "Category": "EXIF",
+    "Name": "FPXVer",
+    "Description":  "FlashPix format version supported by an FPXR file. If the FPXR function supports FlashPix format version 1.0, this is indicated similarly to ExifVer by recording 0100 as a 4-byte ASCII string. Because the type is Undefined, there is no NULL terminator.",
+    "DataType": 258
+  },
+  "0xA001": {
+    "Id": 40961,
+    "Category": "EXIF",
+    "Name": "ColorSpace",
+    "Description":  "Color space specifier. Normally sRGB (=1) is used to define the color space based on the PC monitor conditions and environment. If a color space other than sRGB is used, Uncalibrated (=0xFFFF) is set. Image data recorded as Uncalibrated can be treated as sRGB when it is converted to FlashPix.",
+    "DataType": 3
+  },
+  "0xA002": {
+    "Id": 40962,
+    "Category": "EXIF",
+    "Name": "PixXDim",
+    "Description":  "Information specific to compressed data. When a compressed file is recorded, the valid width of the meaningful image must be recorded in this tag, whether or not there is padding data or a restart marker. This tag should not exist in an uncompressed file.",
+    "DataType": 4
+  },
+  "0xA003": {
+    "Id": 40963,
+    "Category": "EXIF",
+    "Name": "PixYDim",
+    "Description":  "Information specific to compressed data. When a compressed file is recorded, the valid height of the meaningful image must be recorded in this tag whether or not there is padding data or a restart marker. This tag should not exist in an uncompressed file. Because data padding is unnecessary in the vertical direction, the number of lines recorded in this valid image height tag will be the same as that recorded in the SOF.",
+    "DataType": 4
+  },
+  "0xA004": {
+    "Id": 40964,
+    "Category": "EXIF",
+    "Name": "RelatedWav",
+    "Description":  "The name of an audio file related to the image data. The only relational information recorded is the EXIF audio file name and extension (an ASCII string that consists of 8 characters plus a period (.), plus 3 characters). The path is not recorded. When you use this tag, audio files must be recorded in conformance with the EXIF audio format. Writers can also store audio data within APP2 as FlashPix extension stream data.",
+    "DataType": 7
+  },
+  "0xA005": {
+    "Id": 40965,
+    "Category": "EXIF",
+    "Name": "Interop",
+    "Description":  "Offset to a block of property items that contain interoperability information.",
+    "DataType": 7
+  },
+  "0xA20B": {
+    "Id": 41483,
+    "Category": "EXIF",
+    "Name": "FlashEnergy",
+    "Description":  "Strobe energy, in Beam Candle Power Seconds (BCPS), at the time the image was captured.",
+    "DataType": 7
+  },
+  "0xA20C": {
+    "Id": 41484,
+    "Category": "EXIF",
+    "Name": "SpatialFR",
+    "Description":  "Camera or input device spatial frequency table and SFR values in the image width, image height, and diagonal direction, as specified in ISO 12233.",
+    "DataType": 7
+  },
+  "0xA20E": {
+    "Id": 41486,
+    "Category": "EXIF",
+    "Name": "FocalXRes",
+    "Description":  "Number of pixels in the image width (x) direction per unit on the camera focal plane. The unit is specified in ExifFocalResUnit.",
+    "DataType": 7
+  },
+  "0xA20F": {
+    "Id": 41487,
+    "Category": "EXIF",
+    "Name": "FocalYRes",
+    "Description":  "Number of pixels in the image height (y) direction per unit on the camera focal plane. The unit is specified in ExifFocalResUnit.",
+    "DataType": 7
+  },
+  "0xA210": {
+    "Id": 41488,
+    "Category": "EXIF",
+    "Name": "FocalResUnit",
+    "Description":  "Unit of measure for ExifFocalXRes and ExifFocalYRes.",
+    "DataType": 7
+  },
+  "0xA214": {
+    "Id": 41492,
+    "Category": "EXIF",
+    "Name": "SubjectLoc",
+    "Description":  "Location of the main subject in the scene. The value of this tag represents the pixel at the center of the main subject relative to the left edge. The first value indicates the column number, and the second value indicates the row number.",
+    "DataType": 7
+  },
+  "0xA215": {
+    "Id": 41493,
+    "Category": "EXIF",
+    "Name": "ExposureIndex",
+    "Description":  "Exposure index selected on the camera or input device at the time the image was captured.",
+    "DataType": 7
+  },
+  "0xA217": {
+    "Id": 41495,
+    "Category": "EXIF",
+    "Name": "SensingMethod",
+    "Description":  "Image sensor type on the camera or input device.",
+    "DataType": 7
+  },
+  "0xA300": {
+    "Id": 41728,
+    "Category": "EXIF",
+    "Name": "FileSource",
+    "Description":  "The image source. If a DSC recorded the image, the value of this tag is 3.",
+    "DataType": 7
+  },
+  "0xA301": {
+    "Id": 41729,
+    "Category": "EXIF",
+    "Name": "SceneType",
+    "Description":  "The type of scene. If a DSC recorded the image, the value of this tag must be set to 1, indicating that the image was directly photographed.",
+    "DataType": 7
+  },
+  "0xA302": {
+    "Id": 41730,
+    "Category": "EXIF",
+    "Name": "CfaPattern",
+    "Description":  "The color filter array (CFA) geometric pattern of the image sensor when a one-chip color area sensor is used. It does not apply to all sensing methods.",
+    "DataType": 7
+  },
+  "0xA401": {
+    "Id": 41985,
+    "Category": "EXIF",
+    "Name": "CustomRendered",
+    "Description":  "",
+    "DataType": 7
+  },
+  "0xA402": {
+    "Id": 41986,
+    "Category": "EXIF",
+    "Name": "ExposureMode",
+    "Description":  "",
+    "DataType": 3
+  },
+  "0xA403": {
+    "Id": 41987,
+    "Category": "EXIF",
+    "Name": "WhiteBalance",
+    "Description":  "",
+    "DataType": 3
+  },
+  "0xA404": {
+    "Id": 41988,
+    "Category": "EXIF",
+    "Name": "DigitalZoomRatio",
+    "Description":  "",
+    "DataType": 7
+  },
+  "0xA405": {
+    "Id": 41989,
+    "Category": "EXIF",
+    "Name": "FocalLengthIn35mmFilm",
+    "Description":  "",
+    "DataType": 3
+  },
+  "0xA406": {
+    "Id": 41990,
+    "Category": "EXIF",
+    "Name": "SceneCaptureType",
+    "Description":  "",
+    "DataType": 3
+  },
+  "0xA407": {
+    "Id": 41991,
+    "Category": "EXIF",
+    "Name": "GainControl",
+    "Description":  "",
+    "DataType": 3
+  },
+  "0xA408": {
+    "Id": 41992,
+    "Category": "EXIF",
+    "Name": "Contrast",
+    "Description":  "",
+    "DataType": 3
+  },
+  "0xA409": {
+    "Id": 41993,
+    "Category": "EXIF",
+    "Name": "Saturation",
+    "Description":  "",
+    "DataType": 3
+  },
+  "0xA40A": {
+    "Id": 41994,
+    "Category": "EXIF",
+    "Name": "Sharpness",
+    "Description":  "",
+    "DataType": 3
+  },
+  "0xA40B": {
+    "Id": 41995,
+    "Category": "EXIF",
+    "Name": "DeviceSettingDescription",
+    "Description":  "",
+    "DataType": 3
+  },
+  "0xA40C": {
+    "Id": 41996,
+    "Category": "EXIF",
+    "Name": "SubjectDistanceRange",
+    "Description":  "",
+    "DataType": 3
+  },
+  "0xA420": {
+    "Id": 42016,
+    "Category": "Image",
+    "Name": "Image ID",
+    "Description":  "",
+    "DataType": 2
+  }
+}

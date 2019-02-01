@@ -1,0 +1,45 @@
+﻿<Window x:Class="TestThreads.WindowMain"
+        Name="MyWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:hc="clr-namespace:HouseControls;assembly=HouseControls"
+        xmlns:local="clr-namespace:TestThreads"
+        mc:Ignorable="d"
+        Title="Async Test"
+        WindowStyle="ToolWindow" 
+        Width="300"
+        SizeToContent="Height">
+  <Grid Margin="10">
+
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
+    </Grid.RowDefinitions>
+
+    <StackPanel Grid.Row="0" Orientation="Vertical">
+      <local:UserControlTest>
+        <local:UserControlTest.Test>
+          <local:TestCase1/>
+        </local:UserControlTest.Test>
+      </local:UserControlTest>
+      <local:UserControlTest Margin="0,10,0,0">
+        <local:UserControlTest.Test>
+          <local:TestCase2/>
+        </local:UserControlTest.Test>
+      </local:UserControlTest>
+    </StackPanel>
+
+    <Border Grid.Row="1" Margin="0,10,0,0" BorderBrush="Black" BorderThickness="1" MinHeight="200">
+      <TextBlock TextWrapping="Wrap" Text="{Binding Output}">
+        <TextBlock.DataContext>
+          <local:DebugOutput/>
+        </TextBlock.DataContext>
+      </TextBlock>
+    </Border>
+
+
+  </Grid>
+</Window>

@@ -1,0 +1,29 @@
+<UserControl x:Class="HouseControls.ControlImagePanZoom"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:HouseControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+    <ScrollViewer Name="MyScrollViewer"
+                  HorizontalScrollBarVisibility="Auto" 
+                  VerticalScrollBarVisibility="Auto" 
+                  CanContentScroll="True"
+                  Background="LightGray"
+                  PreviewMouseRightButtonDown="MyImage_PreviewMouseRightButtonDown">
+      <Border x:Name="MyBorder">
+        <Image x:Name="MyImage"
+             ClipToBounds="True"
+             Source="{Binding DisplayedImage, NotifyOnTargetUpdated=True}"
+             RenderOptions.BitmapScalingMode="HighQuality"
+             Stretch="None" HorizontalAlignment="Center" VerticalAlignment="Center"
+             MouseWheel="MyImage_MouseWheel" 
+             MouseLeftButtonDown="MyImage_MouseLeftButtonDown" 
+             MouseLeftButtonUp="MyImage_MouseLeftButtonUp"
+             MouseMove="MyImage_MouseMove"/>
+        </Border>
+    </ScrollViewer>
+  </Grid>
+</UserControl>
