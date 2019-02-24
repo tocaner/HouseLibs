@@ -23,6 +23,13 @@ namespace HouseUtils
     }
 
 
+    static public string GetApplicationV3()
+    {
+      string[] fields = Application.ProductVersion.Split('.');
+      return string.Format("{0}.{1}.{2}", fields[0], fields[1], fields[2]);
+    }
+
+
     static public string GetApplicationGuid()
     {
       Assembly asm = Assembly.GetExecutingAssembly();
