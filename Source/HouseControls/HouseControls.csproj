@@ -64,16 +64,28 @@
     <Compile Include="ControlImagePanZoom.xaml.cs">
       <DependentUpon>ControlImagePanZoom.xaml</DependentUpon>
     </Compile>
+    <Page Include="ControlListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ControlNumericUpDown.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ControlListView.xaml.cs">
+      <DependentUpon>ControlListView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ControlNumericUpDown.xaml.cs">
       <DependentUpon>ControlNumericUpDown.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ModelFolderTree.cs" />
+    <Compile Include="ControlFolderTree.model.cs" />
+    <Compile Include="PlainView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -98,6 +110,10 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\HouseImaging\HouseImaging.csproj">
+      <Project>{8d2146a2-1213-4b70-8bdc-e73c298b2c72}</Project>
+      <Name>HouseImaging</Name>
+    </ProjectReference>
     <ProjectReference Include="..\HouseUtils\HouseUtils.csproj">
       <Project>{e9c57c07-1587-4d1a-b800-5e73ce5e0beb}</Project>
       <Name>HouseUtils</Name>
