@@ -13,7 +13,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using HouseImaging;
 
 
 namespace HouseControls
@@ -22,7 +21,7 @@ namespace HouseControls
   {
     // Recommended properties, used by the view styles
     public bool IsChecked { get; set; }
-    public string Image { get; set; }
+    public ImageSource Thumbnail { get; set; }
     public string Title { get; set; }
   }
 
@@ -181,22 +180,6 @@ namespace HouseControls
           });
         }
       }
-    }
-  }
-
-
-  public class ThumbnailGenerator : IValueConverter
-  {
-    public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-    {
-      ImageInfo img = ImageInfo.CreateImageInfo((string)value);
-      ImageInfo thumb = img != null ? img.GetThumbnail(100, 100) : null;
-      return thumb != null ? thumb.GetSystemImageSource() : null;// img != null ? img.GetThumbnail(100, 100) : null;
-    }
-
-    public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-    {
-      throw new NotImplementedException();
     }
   }
 }
