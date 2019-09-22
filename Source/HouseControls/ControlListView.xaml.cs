@@ -38,6 +38,10 @@ namespace HouseControls
       this.ShowCheckboxes = false; // Triggers change from true to false in the component
     }
 
+
+    #region DependencyProperties
+
+    // ColumnNames ------------------------------------------------------------
     // First place is the Checkbox column
     // Second place is the Image/Title column
     public string[] ColumnNames
@@ -59,6 +63,7 @@ namespace HouseControls
             }));
 
 
+    // ItemsSource ------------------------------------------------------------
     public IEnumerable ItemsSource
     {
       get { return (IEnumerable)GetValue(ItemsSourceProperty); }
@@ -78,6 +83,7 @@ namespace HouseControls
             }));
 
 
+    // ViewStyle ------------------------------------------------------------
     public string ViewStyle
     {
       get { return (string)GetValue(ViewStyleProperty); }
@@ -97,6 +103,7 @@ namespace HouseControls
             }));
 
 
+    // ShowCheckboxes ------------------------------------------------------------
     public bool ShowCheckboxes
     {
       get { return (bool)GetValue(ShowCheckboxesProperty); }
@@ -111,34 +118,50 @@ namespace HouseControls
               ControlListView c = sender as ControlListView;
               if (c != null)
               {
-                GridView result = (GridView)c.GetGridView();
+                GridView result = (GridView)c.GetViewStyle("GridView");
                 result.Columns[0].Width = c.ShowCheckboxes ? Double.NaN : 0;
               }
             }));
 
+    #endregion DependencyProperties
 
-    public void RefreshView()
+
+    public void AddViewStyle(string name, ViewBase view)
     {
-      lv.View = GetView(ViewStyle);
+      this.Resources.Add(name, view);
     }
 
 
-    private ViewBase GetView(string str)
+    private void RefreshView()
     {
-      switch (str)
+      lv.View = GetViewStyle(ViewStyle);
+    }
+
+
+    private ViewBase GetViewStyle(string str)
+    {
+      ViewBase result;
+
+      try
       {
-        case "GridView": return GetGridView();
-        case "IconView": return GetIconView();
-        case "TileView": return GetTileView();
-        default: return GetGridView();
+        result = FindResource(str) as ViewBase;
+
+        if (result is GridView)
+        {
+          InitGridView(result as GridView);
+        }
       }
+      catch
+      {
+        result = null;
+      }
+
+      return result;
     }
 
 
-    private ViewBase GetGridView()
+    private void InitGridView(GridView result)
     {
-      GridView result = lv.FindResource("GridView") as GridView;
-
       for (int i = 0; i < ColumnNames.Length; i++)
       {
         string columnName = ColumnNames[i];
@@ -158,22 +181,6 @@ namespace HouseControls
           });
         }
       }
-
-      return result;
-    }
-
-
-    private ViewBase GetIconView()
-    {
-      PlainView result = lv.FindResource("IconView") as PlainView;
-      return result;
-    }
-
-
-    private ViewBase GetTileView()
-    {
-      PlainView result = lv.FindResource("TileView") as PlainView;
-      return result;
     }
   }
 
@@ -185,21 +192,6 @@ namespace HouseControls
       ImageInfo img = ImageInfo.CreateImageInfo((string)value);
       ImageInfo thumb = img != null ? img.GetThumbnail(100, 100) : null;
       return thumb != null ? thumb.GetSystemImageSource() : null;// img != null ? img.GetThumbnail(100, 100) : null;
-    }
-
-    public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-    {
-      throw new NotImplementedException();
-    }
-  }
-
-
-  public class ShowHideColumnWidth : IValueConverter
-  {
-    public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-    {
-      bool show = (bool)value;
-      return show ? Double.NaN : 0;
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
