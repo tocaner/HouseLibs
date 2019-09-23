@@ -38,7 +38,7 @@
           <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <Image Grid.Column="0" Source="{Binding Thumbnail}" Stretch="UniformToFill"/>
-        <TextBlock Grid.Column="1" Text="{Binding Title}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <TextBlock Grid.Column="1" Text="{Binding Name}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
       </Grid>
     </DataTemplate>
 

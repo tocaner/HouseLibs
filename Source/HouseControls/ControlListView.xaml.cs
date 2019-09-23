@@ -20,9 +20,9 @@ namespace HouseControls
   class SampleListObject
   {
     // Recommended properties, used by the view styles
+    public string Name { get; set; }
     public bool IsChecked { get; set; }
     public ImageSource Thumbnail { get; set; }
-    public string Title { get; set; }
   }
 
 
