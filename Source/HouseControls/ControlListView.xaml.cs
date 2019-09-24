@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -23,9 +25,16 @@ namespace HouseControls
     public string Name { get; set; }
     public bool IsChecked { get; set; }
     public ImageSource Thumbnail { get; set; }
+    public int OverlayIndex { get; set; }
   }
 
 
+  public class ItemEventArgs : EventArgs
+  {
+    public object Item { get; set; }
+  }
+
+  
   /// <summary>
   /// Interaction logic for ControlListView.xaml
   /// </summary>
@@ -34,7 +43,34 @@ namespace HouseControls
     public ControlListView()
     {
       InitializeComponent();
-      this.ShowCheckboxes = false; // Triggers change from true to false in the component
+      this.ShowCheckboxes = true; // Triggers change from true to false in the component
+    }
+
+
+    public void InitOverlays(ImageSource[] overlays)
+    {
+      OverlayConverter.Overlays = overlays;
+    }
+
+
+    public List<object> GetCheckedItems()
+    {
+      List<object> result = new List<object>();
+
+      foreach (var item in ItemsSource)
+      {
+        PropertyInfo property = item.GetType().GetProperty("IsChecked");
+
+        if(property != null)
+        {
+          if ((bool)(property.GetValue(item)) == true)
+          {
+            result.Add(item);
+          }
+        }
+      }
+
+      return result;
     }
 
 
@@ -125,10 +161,34 @@ namespace HouseControls
     #endregion DependencyProperties
 
 
+    #region Events
+
+    public event EventHandler SelectionChanged;
+
+    private void Raise_SelectionChanged(object item)
+    {
+      SelectionChanged?.Invoke(this, new ItemEventArgs { Item = item });
+    }
+
+
+    public event EventHandler ItemInvoked;
+
+    private void Raise_ItemInvoked(object item)
+    {
+      ItemInvoked?.Invoke(this, new ItemEventArgs { Item = item });
+    }
+
+    #endregion Events
+
+
+#if NOT_USED
+
     public void AddViewStyle(string name, ViewBase view)
     {
       this.Resources.Add(name, view);
     }
+
+#endif
 
 
     private void RefreshView()
@@ -139,20 +199,11 @@ namespace HouseControls
 
     private ViewBase GetViewStyle(string str)
     {
-      ViewBase result;
+      ViewBase result = TryFindResource(str) as ViewBase;
 
-      try
+      if (str == "GridView")
       {
-        result = FindResource(str) as ViewBase;
-
-        if (result is GridView)
-        {
-          InitGridView(result as GridView);
-        }
-      }
-      catch
-      {
-        result = null;
+        InitGridView(result as GridView);
       }
 
       return result;
@@ -180,6 +231,45 @@ namespace HouseControls
           });
         }
       }
+    }
+
+
+    private object fCurrentItem;
+
+    private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+      if (lv.SelectedItems.Count > 0)
+      {
+        fCurrentItem = lv.SelectedItems[0];
+      }
+      else
+      {
+        fCurrentItem = null;
+      }
+
+      Raise_SelectionChanged(fCurrentItem);
+    }
+
+
+    private void ListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+      Raise_ItemInvoked(fCurrentItem);
+    }
+  }
+
+
+  public class OverlayConverter : IValueConverter
+  {
+    static public ImageSource[] Overlays;
+
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+      return Overlays[(int)value];
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+      throw new NotImplementedException();
     }
   }
 }

@@ -7,50 +7,92 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
   <UserControl.Resources>
-    <DataTemplate x:Key="IconTemplate">
-      <DockPanel>
-        <Image DockPanel.Dock="Top" 
-               Height="30" 
-               Width="30" 
-               HorizontalAlignment="Center" 
-               Stretch="Fill" 
-               Source="{Binding Thumbnail}" 
-               Margin="2"/>
-        <TextBlock DockPanel.Dock="Bottom" 
+
+    <l:OverlayConverter x:Key="OverlayConverter" />
+
+    <Style x:Key="Overlay" TargetType="Image">
+      <Setter Property="Height" Value="20"/>
+      <Setter Property="Width" Value="20"/>
+      <Setter Property="HorizontalAlignment" Value="Left"/>
+      <Setter Property="VerticalAlignment" Value="Bottom"/>
+      <Setter Property="Stretch" Value="Fill"/>
+      <Setter Property="Source" Value="{Binding OverlayIndex, Converter={StaticResource OverlayConverter}}"/>
+    </Style>
+
+    <l:PlainView x:Key="IconView">
+      <l:PlainView.ItemTemplate>
+        <DataTemplate>
+          <DockPanel Width="60">
+            <Grid DockPanel.Dock="Top" >
+              <Image HorizontalAlignment="Center" 
+                     Stretch="Uniform" 
+                     Source="{Binding Thumbnail}" 
+                     Margin="5,5,5,2"/>
+              <Image Style="{StaticResource Overlay}"/>
+            </Grid>
+            <TextBlock DockPanel.Dock="Bottom" 
                    HorizontalAlignment="Center"
                    Text="{Binding Name}" 
-                   FontSize="13" />
-      </DockPanel>
-    </DataTemplate>
+                   TextWrapping="WrapWithOverflow"
+                   FontSize="12" />
+          </DockPanel>
+        </DataTemplate>
+      </l:PlainView.ItemTemplate>
+    </l:PlainView>
 
-    <l:PlainView x:Key="IconView" 
-                 ItemTemplate="{StaticResource IconTemplate}" />
-
-    <DataTemplate x:Key="Checkbox">
-      <CheckBox IsChecked="{Binding IsChecked}">
-      </CheckBox>
-    </DataTemplate>
-
-    <DataTemplate x:Key="DisplayImage">
-      <Grid Height="30">
-        <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="40"/>
-          <ColumnDefinition Width="Auto"/>
-        </Grid.ColumnDefinitions>
-        <Image Grid.Column="0" Source="{Binding Thumbnail}" Stretch="UniformToFill"/>
-        <TextBlock Grid.Column="1" Text="{Binding Name}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-      </Grid>
-    </DataTemplate>
-
+    <l:PlainView x:Key="LargeIconView">
+      <l:PlainView.ItemTemplate>
+        <DataTemplate>
+          <DockPanel Width="100">
+            <Grid DockPanel.Dock="Top" >
+              <Image HorizontalAlignment="Center" 
+                     Stretch="Uniform" 
+                     Source="{Binding Thumbnail}" 
+                     Margin="5,5,5,2"/>
+              <Image Style="{StaticResource Overlay}"/>
+            </Grid>
+            <TextBlock DockPanel.Dock="Bottom" 
+                   HorizontalAlignment="Center"
+                   Text="{Binding Name}" 
+                   TextWrapping="WrapWithOverflow"
+                   FontSize="12" />
+          </DockPanel>
+        </DataTemplate>
+      </l:PlainView.ItemTemplate>
+    </l:PlainView>
+    
     <GridView x:Key="GridView">
-      <GridViewColumn CellTemplate="{StaticResource Checkbox}"/>
-      <GridViewColumn CellTemplate="{StaticResource DisplayImage}"/>
+      <GridViewColumn>
+        <GridViewColumn.CellTemplate>
+          <DataTemplate>
+            <CheckBox IsChecked="{Binding IsChecked}"/>
+          </DataTemplate>
+        </GridViewColumn.CellTemplate>
+      </GridViewColumn>
+      <GridViewColumn>
+        <GridViewColumn.CellTemplate>
+          <DataTemplate>
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+              </Grid.ColumnDefinitions>
+              <Grid Grid.Column="0" Height="40" Width="40">
+                <Image Margin="5" Source="{Binding Thumbnail}" Stretch="Uniform"/>
+                <Image Style="{StaticResource Overlay}"/>
+              </Grid>
+              <TextBlock Grid.Column="1" Margin="5" Text="{Binding Name}" FontSize="12" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            </Grid>
+          </DataTemplate>
+        </GridViewColumn.CellTemplate>
+      </GridViewColumn>
     </GridView>
 
   </UserControl.Resources>
   <Grid>
     <ListView Name="lv"
-              FontSize="12">
+              SelectionChanged="ListView_SelectionChanged" 
+              MouseDoubleClick="ListView_MouseDoubleClick">
     </ListView>
   </Grid>
 </UserControl>
