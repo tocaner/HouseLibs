@@ -19,6 +19,9 @@ using System.Windows.Shapes;
 
 namespace HouseControls
 {
+  public enum OverlayEnum { None, Check, Error };
+
+
   class SampleListObject
   {
     // Recommended properties, used by the view styles
@@ -44,6 +47,14 @@ namespace HouseControls
     {
       InitializeComponent();
       this.ShowCheckboxes = true; // Triggers change from true to false in the component
+
+      // Initialize overlays
+      ImageSource[] overlays = new ImageSource[Enum.GetValues(typeof(OverlayEnum)).Length];
+      foreach (var e in Enum.GetValues(typeof(OverlayEnum)))
+      {
+        overlays[(int)e] = (ImageSource)TryFindResource(e.ToString());
+      }
+      this.InitOverlays(overlays);
     }
 
 

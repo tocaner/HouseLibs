@@ -7,6 +7,8 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
   <UserControl.Resources>
+    <BitmapImage x:Key="Check" UriSource="Icons/Icons8/icons8-checkmark-64.png"/>
+    <BitmapImage x:Key="Error" UriSource="Icons/Icons8/icons8-box-important-64.png"/>
 
     <l:OverlayConverter x:Key="OverlayConverter" />
 

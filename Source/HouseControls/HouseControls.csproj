@@ -119,6 +119,8 @@
     <Resource Include="Icons\Icons8\Computer-96.png" />
     <Resource Include="Icons\Icons8\Folder-96.png" />
     <Resource Include="Icons\Icons8\HDD-96.png" />
+    <Resource Include="Icons\Icons8\icons8-box-important-64.png" />
+    <Resource Include="Icons\Icons8\icons8-checkmark-64.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
