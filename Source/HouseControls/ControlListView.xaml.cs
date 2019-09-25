@@ -43,6 +43,20 @@ namespace HouseControls
   /// </summary>
   public partial class ControlListView : UserControl
   {
+    private DragDropAssist _dragDrop = null;
+    public DragDropAssist DragDropAssist
+    {
+      get
+      {
+        if (_dragDrop == null)
+        {
+          _dragDrop = new DragDropAssist(lv);
+        }
+        return _dragDrop;
+      }
+    }
+
+
     public ControlListView()
     {
       InitializeComponent();

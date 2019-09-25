@@ -85,6 +85,7 @@
       <DependentUpon>ControlNumericUpDown.xaml</DependentUpon>
     </Compile>
     <Compile Include="ControlFolderTree.model.cs" />
+    <Compile Include="DragDropAssist.cs" />
     <Compile Include="PlainView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
