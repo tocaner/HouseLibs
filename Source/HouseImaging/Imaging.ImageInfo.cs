@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using Fingerprint = HouseUtils.Checksum.Fingerprint;
@@ -14,12 +13,14 @@ namespace HouseImaging
   public class ImageInfo : IDisposable
   {
     private Image fSystemImage = null;
-    private Fingerprint fFingerprint = null; 
+    private Fingerprint fFingerprint = null;
+    private MetadataPortal fMetadata = null;
 
 
     public ImageInfo(Image image)
     {
       fSystemImage = image;
+      fMetadata = new MetadataPortal(this);
     }
 
 
@@ -71,6 +72,12 @@ namespace HouseImaging
     public SizePixels SizePixels
     {
       get { return new SizePixels(SystemImage.Width, SystemImage.Height); }
+    }
+
+
+    public MetadataPortal Metadata
+    {
+      get { return fMetadata; }
     }
 
 
@@ -223,13 +230,13 @@ namespace HouseImaging
 
     public ImageTransformer GetTransformerFromExif()
     {
-      return ImageTransformer.CreateFromExif(this.ReadImageMetadata_ExifOrientation());
+      return ImageTransformer.CreateFromExif(fMetadata.Read_ExifOrientation());
     }
 
 
     public ImageTransformer GetThumbnailTransformerFromExif()
     {
-      return ImageTransformer.CreateFromExif(this.ReadImageMetadata_ExifThumbnailOrientation());
+      return ImageTransformer.CreateFromExif(fMetadata.Read_ExifThumbnailOrientation());
     }
 
 
@@ -241,7 +248,7 @@ namespace HouseImaging
 
     public ImageInfo ExtractEmbeddedThumbnail()
     {
-      byte[] data = this.ReadImageMetadata_ThumbnailBytes();
+      byte[] data = fMetadata.Read_ThumbnailBytes();
 
       if ((data != null) && (data.Length > 0))
       {
@@ -276,143 +283,6 @@ namespace HouseImaging
     public bool IsEqual(ImageInfo theOther)
     {
       return this.GetFingerprint().IsEqual(theOther.GetFingerprint());
-    }
-
-
-    public List<MetadataItem> ReadMetadata()
-    {
-      return MetadataPortal.GetImageMetadataList(fSystemImage);
-    }
-
-
-    public int ReadImageMetadata_ExifOrientation()
-    {
-      byte[] bytes = this.ReadImageMetadata(0x0112);
-
-      if (bytes != null)
-      {
-        return bytes[1] << 8 | bytes[0];
-      }
-      else
-      {
-        return -1; // No exif found, valid exif values are 1..8
-      }
-    }
-
-
-    public void SetImageMetadata_ExifOrientation(int value)
-    {
-      byte[] bytes = BitConverter.GetBytes((UInt16)value);
-      this.SetImageMetadata(0x0112, bytes, MetadataType.IntU16);
-    }
-
-
-    public void RemoveImageMetadata_ExifOrientation()
-    {
-      MetadataPortal.RemoveImageMetadata(SystemImage, 0x0112);
-    }
-
-
-    public int ReadImageMetadata_ExifThumbnailOrientation()
-    {
-      byte[] bytes = this.ReadImageMetadata(0x5029);
-
-      if (bytes != null)
-      {
-        return bytes[1] << 8 | bytes[0];
-      }
-      else
-      {
-        return -1; // No exif found, valid exif values are 1..8
-      }
-    }
-
-
-    public void SetImageMetadata_ExifThumbnailOrientation(int value)
-    {
-      byte[] bytes = BitConverter.GetBytes((UInt16)value);
-      this.SetImageMetadata(0x5029, bytes, MetadataType.IntU16);
-    }
-
-
-    public void RemoveImageMetadata_ExifThumbnailOrientation()
-    {
-      MetadataPortal.RemoveImageMetadata(SystemImage, 0x5029);
-    }
-
-
-    public byte[] ReadImageMetadata_ThumbnailBytes()
-    {
-      return this.ReadImageMetadata(0x501B);
-    }
-
-
-    public string ReadImageMetadata_UserComment()
-    {
-      byte[] bytes = this.ReadImageMetadata(0x9286);
-
-      if (bytes != null)
-      {
-        return MetadataFormat.FormatValue(MetadataType.String, bytes);
-      }
-      else
-      {
-        return string.Empty;
-      }
-    }
-
-
-    public void SetImageMetadata_UserComment(string value)
-    {
-      byte[] bytes = MetadataFormat.EncodeValue(MetadataType.String, value);
-      this.SetImageMetadata(0x9286, bytes, MetadataType.String);
-    }
-
-
-    public DateTime ReadImageMetadata_DateTaken()
-    {
-      DateTime result;
-
-      if (DateTime.TryParseExact(ReadImageMetadata_String(0x0132), "yyyy:MM:dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out result) == false)
-      {
-        result = DateTime.MinValue;
-      }
-
-      return result;
-    }
-
-
-    public string ReadImageMetadata_String(int propId)
-    {
-      byte[] bytes = this.ReadImageMetadata(propId);
-
-      if (bytes != null)
-      {
-        return MetadataFormat.FormatValue(MetadataType.String, bytes);
-      }
-      else
-      {
-        return string.Empty;
-      }
-    }
-
-
-    public void SetImageMetadata_String(int propId, string value)
-    {
-      byte[] bytes = MetadataFormat.EncodeValue(MetadataType.String, value);
-      this.SetImageMetadata(propId, bytes, MetadataType.String);
-    }
-
-
-    public byte[] ReadImageMetadata(int propId)
-    {
-      return MetadataPortal.ReadImageMetadata(SystemImage, propId);
-    }
-
-
-    public void SetImageMetadata(int propId, byte[] data, MetadataType dataType)
-    {
-      MetadataPortal.SetImageMetadata(SystemImage, propId, data, dataType);
     }
   }
 }

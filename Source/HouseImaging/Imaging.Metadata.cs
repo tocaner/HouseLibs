@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -11,6 +12,287 @@ using HouseUtils;
 
 namespace HouseImaging
 {
+  public class MetadataPortal
+  {
+    private Image fSystemImage;
+    
+     
+    public MetadataPortal(ImageInfo imageInfo)
+    {
+      fSystemImage = imageInfo.SystemImage;
+    }
+
+
+    public int Read_ExifOrientation()
+    {
+      return Read_IntU16(0x0112);
+    }
+
+
+    public void Set_ExifOrientation(int value)
+    {
+      Set_IntU16(0x0112, value);
+    }
+
+
+    public void Remove_ExifOrientation()
+    {
+      this.Remove(0x0112);
+    }
+
+
+    public int Read_ExifThumbnailOrientation()
+    {
+      return Read_IntU16(0x5029);
+    }
+
+
+    public void Set_ExifThumbnailOrientation(int value)
+    {
+      Set_IntU16(0x5029, value);
+    }
+
+
+    public void Remove_ExifThumbnailOrientation()
+    {
+      this.Remove(0x5029);
+    }
+
+
+    public byte[] Read_ThumbnailBytes()
+    {
+      return this.Read(0x501B);
+    }
+
+
+    public string Read_UserComment()
+    {
+      return Read_String(0x9286);
+    }
+
+
+    public string Read_Title()
+    {
+      return Read_String(0x9C9B);
+    }
+
+
+    public string Read_Comments()
+    {
+      return Read_String(0x9C9C);
+    }
+
+
+    public string Read_Author()
+    {
+      return Read_String(0x9C9D);
+    }
+
+
+    public string Read_Tags()
+    {
+      return Read_String(0x9C9E);
+    }
+
+
+    public string Read_Subject()
+    {
+      return Read_String(0x9C9F);
+    }
+
+
+    public DateTime Read_DateTaken()
+    {
+      DateTime result;
+
+      if (DateTime.TryParseExact(Read_String(0x0132), "yyyy:MM:dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out result) == false)
+      {
+        result = DateTime.MinValue;
+      }
+
+      return result;
+    }
+
+
+    public int Read_IntU16(int propId)
+    {
+      byte[] bytes = this.Read(propId);
+
+      if (bytes != null)
+      {
+        return bytes[1] << 8 | bytes[0];
+      }
+      else
+      {
+        return -1; // No exif found, valid exif values are 1..8
+      }
+    }
+
+
+    public void Set_IntU16(int propId, int value)
+    {
+      byte[] bytes = BitConverter.GetBytes((UInt16)value);
+      this.Set(propId, bytes, MetadataType.IntU16);
+    }
+
+
+    public string Read_String(int propId)
+    {
+      byte[] bytes = this.Read(propId);
+
+      if (bytes != null)
+      {
+        return MetadataFormat.FormatValue(MetadataType.String, bytes);
+      }
+      else
+      {
+        return string.Empty;
+      }
+    }
+
+
+    public void Set_String(int propId, string value)
+    {
+      byte[] bytes = MetadataFormat.EncodeValue(MetadataType.String, value);
+      this.Set(propId, bytes, MetadataType.String);
+    }
+
+
+    public byte[] Read(int propId)
+    {
+      byte[] result = null;
+
+      PropertyItem prop = fSystemImage.PropertyItems.FirstOrDefault(item => item.Id == propId);
+
+      if (prop != null)
+      {
+        result = prop.Value;
+      }
+
+      return result;
+    }
+
+
+    public void Set(int id, byte[] data, MetadataType dataType = 0)
+    {
+      PropertyItem prop = fSystemImage.PropertyItems.FirstOrDefault(p => p.Id == id);
+
+      if (prop == null)
+      {
+        prop = CreatePropertyItem(id);
+      }
+
+      if (prop != null)
+      {
+        if (dataType == 0)
+        {
+          // Keep default prop.Type
+        }
+        else
+        {
+          prop.Type = (short)(((short)dataType) & 0xFF);
+        }
+
+        prop.Value = data;
+        prop.Len = data.Length;
+
+        fSystemImage.SetPropertyItem(prop);
+      }
+    }
+
+
+    public void Remove(int id)
+    {
+      PropertyItem prop = fSystemImage.PropertyItems.FirstOrDefault(p => p.Id == id);
+
+      if (prop != null)
+      {
+        // Attempt removing the property only if it exists
+        fSystemImage.RemovePropertyItem(id);
+      }
+    }
+
+
+    private const string RESOURCENAME = "HouseImaging.Dummy.jpg";
+
+
+    private static PropertyItem CreatePropertyItem(int id)
+    {
+      Image image = new Bitmap(Assembly.GetExecutingAssembly().GetManifestResourceStream(RESOURCENAME));
+      PropertyItem prop = image.PropertyItems[0];
+      prop.Id = id;
+      prop.Type = 0;
+      return prop;
+    }
+
+
+    public List<MetadataItem> GetList()
+    {
+      List<MetadataItem> result = new List<MetadataItem>();
+
+      foreach (PropertyItem prop in fSystemImage.PropertyItems)
+      {
+        result.Add(new MetadataItem(prop));
+      }
+
+      return result;
+    }
+
+
+    public List<MetadataItem> GetAllDefinedMetadata()
+    {
+      List<MetadataItem> result = GetList();
+
+      foreach (MetadataDefinition defn in MetadataLibrary.GetList())
+      {
+        MetadataItem item = result.FirstOrDefault(c => c.Definition.Id == defn.Id);
+
+        if (item == null)
+        {
+          result.Add(new MetadataItem(defn));
+        }
+      }
+
+      return result;
+    }
+
+
+    public static void ExportMetadataDefinitionsToCsv(string path)
+    {
+      using (Stream stream = new FileStream(path, FileMode.Create, FileAccess.Write))
+      {
+        using (StreamWriter writer = new StreamWriter(stream))
+        {
+          foreach (MetadataDefinition defn in MetadataLibrary.GetList())
+          {
+            string line = string.Format("{0:X4}, {0}, {1}, {2}, {3}, {4}",
+              defn.Id,
+              defn.Category,
+              defn.Name,
+              "type",
+              defn.Description
+              );
+            writer.WriteLine(line);
+          }
+        }
+      }
+    }
+
+
+    public static void ExportAllKnownMetadataDefinitions(string path)
+    {
+      Dictionary<string, object> result = new Dictionary<string, object>();
+
+      foreach (MetadataDefinition defn in MetadataLibrary.GetList())
+      {
+        result.Add("0x" + defn.Id.ToString("X4"), defn);
+      }
+
+      File.WriteAllText(path, Json.Serialize(result));
+    }
+  }
+
+
   public class MetadataItem
   {
     public MetadataDefinition Definition;
@@ -68,12 +350,6 @@ namespace HouseImaging
     }
 
 
-    public void Apply(Image image)
-    {
-      MetadataPortal.SetImageMetadata(image, Definition.Id, Data, Definition.DataType);
-    }
-
-
     public override string ToString()
     {
       return MetadataFormat.FormatValue(Definition.DataType, Data);
@@ -105,146 +381,6 @@ namespace HouseImaging
     public string Name { get; set; }
     public string Description { get; set; }
     public MetadataType DataType { get; set; }
-  }
-
-
-  public class MetadataPortal
-  {
-    public static byte[] ReadImageMetadata(Image image, int id)
-    {
-      byte[] result = null;
-
-      PropertyItem prop = image.PropertyItems.FirstOrDefault(item => item.Id == id);
-
-      if (prop != null)
-      {
-        result = prop.Value;
-      }
-
-      return result;
-    }
-
-
-    public static void SetImageMetadata(Image image, int id, byte[] data, MetadataType dataType = 0)
-    {
-      PropertyItem prop = image.PropertyItems.FirstOrDefault(p => p.Id == id);
-
-      if (prop == null)
-      {
-        prop = CreatePropertyItem(id);
-      }
-
-      if (prop != null)
-      {
-        if (dataType == 0)
-        {
-          // Keep default prop.Type
-        }
-        else
-        {
-          prop.Type = (short)(((short)dataType) & 0xFF);
-        }
-        
-        prop.Value = data;
-        prop.Len = data.Length;
-
-        image.SetPropertyItem(prop);
-      }
-    }
-
-
-    public static void RemoveImageMetadata(Image image, int id)
-    {
-      PropertyItem prop = image.PropertyItems.FirstOrDefault(p => p.Id == id);
-
-      if (prop != null)
-      {
-        // Attempt removing the property only if it exists
-        image.RemovePropertyItem(id);
-      }
-    }
-
-
-    private const string RESOURCENAME = "HouseImaging.Dummy.jpg";
-
-
-    private static PropertyItem CreatePropertyItem(int id)
-    {
-      Image image = new Bitmap(Assembly.GetExecutingAssembly().GetManifestResourceStream(RESOURCENAME));
-      PropertyItem prop = image.PropertyItems[0];
-      prop.Id = id;
-      prop.Type = 0;
-      return prop;
-    }
-
-
-    public static List<MetadataItem> GetImageMetadataList(Image image)
-    {
-      List<MetadataItem> result = new List<MetadataItem>();
-
-      if (image != null)
-      {
-        foreach (PropertyItem prop in image.PropertyItems)
-        {
-          result.Add(new MetadataItem(prop));
-        }
-      }
-
-      return result;
-    }
-
-
-    public static List<MetadataItem> GetAllKnownMetadata(Image image = null)
-    {
-      List<MetadataItem> result = GetImageMetadataList(image);
-
-      foreach (MetadataDefinition defn in MetadataLibrary.GetList())
-      {
-        MetadataItem item = result.FirstOrDefault(c => c.Definition.Id == defn.Id);
-
-        if (item == null)
-        {
-          result.Add(new MetadataItem(defn));
-        }
-      }
-
-      return result;
-    }
-
-
-    public static void ExportMetadataDefinitionsToCsv(string path)
-    {
-      using (Stream stream = new FileStream(path, FileMode.Create, FileAccess.Write))
-      {
-        using (StreamWriter writer = new StreamWriter(stream))
-        {
-          foreach (MetadataDefinition defn in MetadataLibrary.GetList())
-          {
-            string line = string.Format("{0:X4}, {0}, {1}, {2}, {3}, {4}",
-              defn.Id,
-              defn.Category,
-              defn.Name,
-              "type",
-              defn.Description
-              );
-            writer.WriteLine(line);
-          }
-        }
-      }
-    }
-
-
-    public static void ExportAllKnownMetadataDefinitions(string path)
-    {
-      Dictionary<string, object> result = new Dictionary<string, object>();
-
-      foreach (MetadataDefinition defn in MetadataLibrary.GetList())
-      {
-        result.Add("0x" + defn.Id.ToString("X4"), defn);
-      }
-
-      File.WriteAllText(path, Json.Serialize(result));
-    }
   }
 
 
