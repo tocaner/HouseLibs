@@ -34,7 +34,7 @@ namespace HouseImaging
     }
 
 
-    public static ImageInfo CreateImageInfo(byte[] byteArray)
+    public static ImageInfo FromByteArray(byte[] byteArray)
     {
       try
       {
@@ -48,7 +48,7 @@ namespace HouseImaging
     }
 
 
-    public static ImageInfo CreateImageInfo(string filename)
+    public static ImageInfo FromFile(string filename)
     {
       try
       {
@@ -95,7 +95,7 @@ namespace HouseImaging
 
     public static ImageSource ReadImageSourceFromFile(string path)
     {
-      using (ImageInfo image = ImageInfo.CreateImageInfo(path))
+      using (ImageInfo image = ImageInfo.FromFile(path))
       {
         return image.GetSystemImageSource();
       }
@@ -252,7 +252,7 @@ namespace HouseImaging
 
       if ((data != null) && (data.Length > 0))
       {
-        return CreateImageInfo(data);
+        return FromByteArray(data);
       }
       else
       {
