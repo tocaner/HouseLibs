@@ -209,7 +209,7 @@ namespace HouseImaging
     }
 
 
-    public void Transform(ImageTransformer index)
+    public void Transform(Orientation index)
     {
       if (index.IsTransformed)
       {
@@ -219,7 +219,7 @@ namespace HouseImaging
     }
 
 
-    public ImageInfo GetTransformedImage(ImageTransformer index)
+    public ImageInfo GetTransformedImage(Orientation index)
     {
       // TODO: Simplify this by removing internal redundant steps
       ImageInfo result = this.Clone();
@@ -228,15 +228,15 @@ namespace HouseImaging
     }
 
 
-    public ImageTransformer GetTransformerFromExif()
+    public Orientation GetOrientation()
     {
-      return ImageTransformer.CreateFromExif(fMetadata.Read_ExifOrientation());
+      return Orientation.FromExif(fMetadata.Read_ExifOrientation());
     }
 
 
-    public ImageTransformer GetThumbnailTransformerFromExif()
+    public Orientation GetThumbnailOrientation()
     {
-      return ImageTransformer.CreateFromExif(fMetadata.Read_ExifThumbnailOrientation());
+      return Orientation.FromExif(fMetadata.Read_ExifThumbnailOrientation());
     }
 
 

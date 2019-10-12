@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace HouseImaging
 {
-  public class ImageTransformer
+  public class Orientation
   {
-    private int fOrientation;
+    private int fRotation;
     private bool fIsMirrored;
 
 
-    public ImageTransformer(int value = 0)
+    public Orientation(int value = 0)
     {
       Value = value;
     }
@@ -20,12 +20,12 @@ namespace HouseImaging
 
     public int Value
     {
-      get { return 7 & (fOrientation + (fIsMirrored ? 4 : 0)); }
+      get { return 7 & (fRotation + (fIsMirrored ? 4 : 0)); }
 
       private set
       {
         fIsMirrored = (value & 4) != 0;
-        fOrientation = value & 3;
+        fRotation = value & 3;
       }
     }
 
@@ -38,19 +38,19 @@ namespace HouseImaging
 
     public bool IsFlipped
     {
-      get { return ((fOrientation & 1) == 1); }
+      get { return ((fRotation & 1) == 1); }
     }
 
 
     public void RotateClockwise()
     {
-      fOrientation = (fOrientation + 1) % 4;
+      fRotation = (fRotation + 1) % 4;
     }
 
 
     public void RotateCounterClockwise()
     {
-      fOrientation = (fOrientation + 3) % 4;
+      fRotation = (fRotation + 3) % 4;
     }
 
 
@@ -60,7 +60,7 @@ namespace HouseImaging
 
       if (IsFlipped == true)
       {
-        fOrientation = (fOrientation + 2) % 4;
+        fRotation = (fRotation + 2) % 4;
       }
     }
 
@@ -71,7 +71,7 @@ namespace HouseImaging
 
       if (IsFlipped == false)
       {
-        fOrientation = (fOrientation + 2) % 4;
+        fRotation = (fRotation + 2) % 4;
       }
     }
 
@@ -114,7 +114,7 @@ namespace HouseImaging
     };
 
 
-    public void Add(ImageTransformer other)
+    public void Add(Orientation other)
     {
       this.Value = fAdditionTable[this.Value, other.Value];
     }
@@ -126,23 +126,23 @@ namespace HouseImaging
     };
 
 
-    public void Reverse(ImageTransformer other)
+    public void Reverse(Orientation other)
     {
       this.Value = fReverseTable[other.Value];
     }
 
 
-    public ImageTransformer GetReversalIndex()
+    public Orientation GetReversal()
     {
-      ImageTransformer result = new ImageTransformer();
+      Orientation result = new Orientation();
       result.Reverse(this);
       return result;
     }
 
 
-    public static ImageTransformer CreateFromExif(int exif)
+    public static Orientation FromExif(int exif)
     {
-      return new ImageTransformer(ImageTransformer.ValueFromExif(exif));
+      return new Orientation(Orientation.ValueFromExif(exif));
     }
   }
 }

@@ -53,7 +53,7 @@
     <Compile Include="Imaging.ImageInfo.cs" />
     <Compile Include="Imaging.ImageTools.cs" />
     <Compile Include="Imaging.SizePixels.cs" />
-    <Compile Include="Imaging.ImageTransformer.cs" />
+    <Compile Include="Imaging.Orientation.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HouseUtils\HouseUtils.csproj">
