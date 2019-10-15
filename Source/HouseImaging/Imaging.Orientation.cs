@@ -144,5 +144,11 @@ namespace HouseImaging
     {
       return new Orientation(Orientation.ValueFromExif(exif));
     }
+
+
+    public override string ToString()
+    {
+      return string.Format("{0} ({1} exif)", this.Value, this.ValueToExif());
+    }
   }
 }
