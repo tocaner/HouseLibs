@@ -23,6 +23,12 @@ namespace HouseImaging
     }
 
 
+    public bool Has_ExifOrientation()
+    {
+      return Has(0x0112);
+    }
+
+
     public int Read_ExifOrientation()
     {
       return Read_IntU16(0x0112);
@@ -158,11 +164,23 @@ namespace HouseImaging
     }
 
 
+    private PropertyItem _get_property_item(int propId)
+    {
+      return fSystemImage.PropertyItems.FirstOrDefault(item => item.Id == propId);
+    }
+
+
+    public bool Has(int propId)
+    {
+      return _get_property_item(propId) != null;
+    }
+
+
     public byte[] Read(int propId)
     {
       byte[] result = null;
 
-      PropertyItem prop = fSystemImage.PropertyItems.FirstOrDefault(item => item.Id == propId);
+      PropertyItem prop = _get_property_item(propId);
 
       if (prop != null)
       {
@@ -175,7 +193,7 @@ namespace HouseImaging
 
     public void Set(int id, byte[] data, MetadataType dataType = 0)
     {
-      PropertyItem prop = fSystemImage.PropertyItems.FirstOrDefault(p => p.Id == id);
+      PropertyItem prop = _get_property_item(id);
 
       if (prop == null)
       {
@@ -203,7 +221,7 @@ namespace HouseImaging
 
     public void Remove(int id)
     {
-      PropertyItem prop = fSystemImage.PropertyItems.FirstOrDefault(p => p.Id == id);
+      PropertyItem prop = _get_property_item(id);
 
       if (prop != null)
       {

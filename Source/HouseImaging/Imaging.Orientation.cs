@@ -95,9 +95,10 @@ namespace HouseImaging
     }
 
 
-    public int ValueToExif()
+    public int AsExif
     {
-      return ValueToExif(this.Value);
+      get { return ValueToExif(this.Value); }
+      set { this.Value = ValueFromExif(value); }
     }
 
 
@@ -148,7 +149,7 @@ namespace HouseImaging
 
     public override string ToString()
     {
-      return string.Format("{0} ({1} exif)", this.Value, this.ValueToExif());
+      return string.Format("{0} ({1} exif)", this.Value, this.AsExif);
     }
   }
 }
