@@ -20,7 +20,6 @@ namespace HouseImaging
     public ImageInfo(Image image)
     {
       fSystemImage = image;
-      fMetadata = new MetadataPortal(this);
     }
 
 
@@ -77,7 +76,15 @@ namespace HouseImaging
 
     public MetadataPortal Metadata
     {
-      get { return fMetadata; }
+      get
+      {
+        if (fMetadata == null)
+        {
+          fMetadata = new MetadataPortal(this);
+        }
+
+        return fMetadata;
+      }
     }
 
 
@@ -197,6 +204,7 @@ namespace HouseImaging
         fSystemImage.Dispose(); // Free resources for the existing image and create new one from byte buffer
         fSystemImage = newImage;
         fFingerprint = null;
+        fMetadata = null;
       }
     }
 
@@ -230,13 +238,13 @@ namespace HouseImaging
 
     public Orientation GetOrientation()
     {
-      return Orientation.FromExif(fMetadata.Read_ExifOrientation());
+      return Orientation.FromExif(Metadata.Read_ExifOrientation());
     }
 
 
     public Orientation GetThumbnailOrientation()
     {
-      return Orientation.FromExif(fMetadata.Read_ExifThumbnailOrientation());
+      return Orientation.FromExif(Metadata.Read_ExifThumbnailOrientation());
     }
 
 
@@ -248,7 +256,7 @@ namespace HouseImaging
 
     public ImageInfo ExtractEmbeddedThumbnail()
     {
-      byte[] data = fMetadata.Read_ThumbnailBytes();
+      byte[] data = Metadata.Read_ThumbnailBytes();
 
       if ((data != null) && (data.Length > 0))
       {
