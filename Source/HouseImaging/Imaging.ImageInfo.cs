@@ -248,7 +248,7 @@ namespace HouseImaging
     }
 
 
-    public ImageInfo CreateThumbnail(int maxWidth, int maxHeight)
+    public ImageInfo GetThumbnail(int maxWidth, int maxHeight)
     {
       return new ImageInfo(ImageTools.CreateThumbnail(fSystemImage, maxWidth, maxHeight));
     }
@@ -266,19 +266,6 @@ namespace HouseImaging
       {
         return null;
       }
-    }
-
-
-    public ImageInfo GetThumbnail(int maxWidth, int maxHeight)
-    {
-      ImageInfo result = ExtractEmbeddedThumbnail();
-
-      if (result == null)
-      {
-        result = CreateThumbnail(maxWidth, maxHeight);
-      }
-
-      return result;
     }
 
 
