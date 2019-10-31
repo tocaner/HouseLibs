@@ -24,19 +24,18 @@
     <l:PlainView x:Key="IconView">
       <l:PlainView.ItemTemplate>
         <DataTemplate>
-          <DockPanel Width="60">
-            <Grid DockPanel.Dock="Top" >
-              <Image HorizontalAlignment="Center" 
+          <DockPanel LastChildFill="True" Width="200" Height="35">
+            <Grid DockPanel.Dock="Left" >
+              <Image VerticalAlignment="Center" 
                      Stretch="Uniform" 
                      Source="{Binding Thumbnail}" 
-                     Margin="5,5,5,2"/>
+                     Margin="5,5,7,2"/>
               <Image Style="{StaticResource Overlay}"/>
             </Grid>
-            <TextBlock DockPanel.Dock="Bottom" 
-                   HorizontalAlignment="Center"
-                   Text="{Binding Name}" 
-                   TextWrapping="WrapWithOverflow"
-                   FontSize="12" />
+            <TextBlock VerticalAlignment="Center"
+                       Text="{Binding Name}" 
+                       TextWrapping="WrapWithOverflow"
+                       FontSize="12" />
           </DockPanel>
         </DataTemplate>
       </l:PlainView.ItemTemplate>
@@ -74,16 +73,16 @@
       <GridViewColumn>
         <GridViewColumn.CellTemplate>
           <DataTemplate>
-            <Grid>
+            <Grid Height="35">
               <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
               </Grid.ColumnDefinitions>
-              <Grid Grid.Column="0" Height="40" Width="40">
-                <Image Margin="5" Source="{Binding Thumbnail}" Stretch="Uniform"/>
+              <Grid Grid.Column="0">
+                <Image Margin="5,3,7,2" Source="{Binding Thumbnail}" Stretch="Uniform"/>
                 <Image Style="{StaticResource Overlay}"/>
               </Grid>
-              <TextBlock Grid.Column="1" Margin="5" Text="{Binding Name}" FontSize="12" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+              <TextBlock Grid.Column="1" Text="{Binding Name}" FontSize="12" HorizontalAlignment="Left" VerticalAlignment="Center"/>
             </Grid>
           </DataTemplate>
         </GridViewColumn.CellTemplate>
