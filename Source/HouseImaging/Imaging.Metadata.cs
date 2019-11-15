@@ -372,6 +372,17 @@ namespace HouseImaging
     {
       return MetadataFormat.FormatValue(Definition.DataType, Data);
     }
+
+
+    public void FromString(string valueAsString)
+    {
+      byte[] data = MetadataFormat.EncodeValue(Definition.DataType, valueAsString);
+
+      if (data != null)
+      {
+        Data = data;
+      }
+    }
   }
 
 
@@ -475,7 +486,7 @@ namespace HouseImaging
   }
 
 
-  public class MetadataFormat
+  internal class MetadataFormat
   {
     private const string DOUBLETYPE_FORMAT = "0.0####";
 
