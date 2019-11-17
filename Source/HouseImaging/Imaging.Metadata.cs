@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -23,150 +22,129 @@ namespace HouseImaging
     }
 
 
-    public bool Has_ExifOrientation()
+    private PropertyItem _get_property_item(int propId)
     {
-      return Has(0x0112);
+      return fSystemImage.PropertyItems.FirstOrDefault(item => item.Id == propId);
     }
 
 
-    public int Read_ExifOrientation()
+    public static object GetObject(PropertyItem prop)
     {
-      return Read_IntU16(0x0112);
-    }
+      object result = null;
+      MetadataType dataType = (MetadataType)prop.Type;
+      byte[] data = prop.Value;
 
-
-    public void Set_ExifOrientation(int value)
-    {
-      Set_IntU16(0x0112, value);
-    }
-
-
-    public void Remove_ExifOrientation()
-    {
-      this.Remove(0x0112);
-    }
-
-
-    public int Read_ExifThumbnailOrientation()
-    {
-      return Read_IntU16(0x5029);
-    }
-
-
-    public void Set_ExifThumbnailOrientation(int value)
-    {
-      Set_IntU16(0x5029, value);
-    }
-
-
-    public void Remove_ExifThumbnailOrientation()
-    {
-      this.Remove(0x5029);
-    }
-
-
-    public byte[] Read_ThumbnailBytes()
-    {
-      return this.Read(0x501B);
-    }
-
-
-    public string Read_UserComment()
-    {
-      return Read_String(0x9286);
-    }
-
-
-    public string Read_Title()
-    {
-      return Read_String(0x9C9B);
-    }
-
-
-    public string Read_Comments()
-    {
-      return Read_String(0x9C9C);
-    }
-
-
-    public string Read_Author()
-    {
-      return Read_String(0x9C9D);
-    }
-
-
-    public string Read_Tags()
-    {
-      return Read_String(0x9C9E);
-    }
-
-
-    public string Read_Subject()
-    {
-      return Read_String(0x9C9F);
-    }
-
-
-    public DateTime Read_DateTaken()
-    {
-      DateTime result;
-
-      if (DateTime.TryParseExact(Read_String(0x0132), "yyyy:MM:dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out result) == false)
+      switch (dataType)
       {
-        result = DateTime.MinValue;
+        case MetadataType.String:
+          {
+            result = StringTools.StringFromByteArray(data, data.Length - 1);
+          }
+          break;
+        case MetadataType.CharArray:
+          {
+            result = StringTools.StringFromByteArray(data, data.Length);
+          }
+          break;
+        case MetadataType.Unicode:
+          {
+            result = Encoding.Unicode.GetString(data, 0, data.Length - 2); // TODO
+          }
+          break;
+        case MetadataType.IntU16:
+          {
+            UInt16[] array = new UInt16[data.Length / sizeof(UInt16)];
+            for (int i = 0; i < array.Length; i++)
+            {
+              array[i] = BitConverter.ToUInt16(data, i * sizeof(UInt16));
+            }
+            result = array.Length == 1 ? (object)array[0] : (object)array;
+          }
+          break;
+        case MetadataType.IntU32:
+          {
+            UInt32[] array = new UInt32[data.Length / sizeof(UInt32)];
+            for (int i = 0; i < array.Length; i++)
+            {
+              array[i] = BitConverter.ToUInt32(data, i * sizeof(UInt32));
+            }
+            result = array.Length == 1 ? (object)array[0] : (object)array;
+          }
+          break;
+        case MetadataType.IntS32:
+          {
+            Int32[] array = new Int32[data.Length / sizeof(Int32)];
+            for (int i = 0; i < array.Length; i++)
+            {
+              array[i] = BitConverter.ToInt32(data, i * sizeof(Int32));
+            }
+            result = array.Length == 1 ? (object)array[0] : (object)array;
+          }
+          break;
+        case MetadataType.FracU32:
+          {
+            UInt64[] array = new UInt64[data.Length / (2 * sizeof(UInt32))];
+            for (int i = 0; i < array.Length; i++)
+            {
+              int pos = i * 2 * sizeof(UInt32);
+              UInt32 numer = BitConverter.ToUInt32(data, pos);
+              UInt32 denom = BitConverter.ToUInt32(data, pos + sizeof(UInt32));
+              array[i] = ((((UInt64)denom) << 32) | numer);
+            }
+            result = array.Length == 1 ? (object)array[0] : (object)array;
+          }
+          break;
+        case MetadataType.FracS32:
+          {
+            Int64[] array = new Int64[data.Length / (2 * sizeof(Int32))];
+            for (int i = 0; i < array.Length; i++)
+            {
+              int pos = i * 2 * sizeof(Int32);
+              Int32 numer = BitConverter.ToInt32(data, pos);
+              Int32 denom = BitConverter.ToInt32(data, pos + sizeof(Int32));
+              array[i] = ((((Int64)(UInt32)denom) << 32) | (UInt32)numer);
+            }
+            result = array.Length == 1 ? (object)array[0] : (object)array;
+          }
+          break;
+        case MetadataType.Byte:
+        case MetadataType.Undefined:
+        default:
+          {
+            result = data != null ? ArrayTools.DuplicateByteArray(data) : null;
+          }
+          break;
       }
 
       return result;
     }
 
 
-    public int Read_IntU16(int propId)
+    private static void SetObject(PropertyItem prop, object value)
     {
-      byte[] bytes = this.Read(propId);
+      byte[] bytes;
+      MetadataType type;
 
-      if (bytes != null)
+      if (value is UInt16)
       {
-        return bytes[1] << 8 | bytes[0];
+        bytes = BitConverter.GetBytes((UInt16)value);
+        type = MetadataType.IntU16;
+      }
+      else if (value is string)
+      {
+        // ToDo: If Char Array no '\0'
+        bytes = StringTools.ByteArrayFromString((value as string) + '\0');
+        type = MetadataType.String;
       }
       else
       {
-        return -1; // No exif found, valid exif values are 1..8
+        bytes = new byte[0];
+        type = MetadataType.Undefined;
       }
-    }
 
-
-    public void Set_IntU16(int propId, int value)
-    {
-      byte[] bytes = BitConverter.GetBytes((UInt16)value);
-      this.Set(propId, bytes, MetadataType.IntU16);
-    }
-
-
-    public string Read_String(int propId)
-    {
-      byte[] bytes = this.Read(propId);
-
-      if (bytes != null)
-      {
-        return MetadataFormat.FormatValue(MetadataType.String, bytes);
-      }
-      else
-      {
-        return string.Empty;
-      }
-    }
-
-
-    public void Set_String(int propId, string value)
-    {
-      byte[] bytes = MetadataFormat.EncodeValue(MetadataType.String, value);
-      this.Set(propId, bytes, MetadataType.String);
-    }
-
-
-    private PropertyItem _get_property_item(int propId)
-    {
-      return fSystemImage.PropertyItems.FirstOrDefault(item => item.Id == propId);
+      prop.Type = (short)type;
+      prop.Value = bytes;
+      prop.Len = bytes.Length;
     }
 
 
@@ -176,28 +154,45 @@ namespace HouseImaging
     }
 
 
-    public byte[] Read(int propId)
+    public object Read(int propId)
     {
-      byte[] result = null;
+      object result = null;
 
       PropertyItem prop = _get_property_item(propId);
 
       if (prop != null)
       {
-        result = prop.Value;
+        result = GetObject(prop);
       }
 
       return result;
     }
 
 
-    public void Set(int id, byte[] data, MetadataType dataType = 0)
+    public void Set(int propId, object value)
     {
-      PropertyItem prop = _get_property_item(id);
+      PropertyItem prop = _get_property_item(propId);
 
       if (prop == null)
       {
-        prop = CreatePropertyItem(id);
+        prop = CreatePropertyItem(propId);
+      }
+
+      if (prop != null)
+      {
+        SetObject(prop, value);
+        fSystemImage.SetPropertyItem(prop);
+      }
+    }
+
+
+    public void Set(int propId, byte[] data, MetadataType dataType = 0)
+    {
+      PropertyItem prop = _get_property_item(propId);
+
+      if (prop == null)
+      {
+        prop = CreatePropertyItem(propId);
       }
 
       if (prop != null)
@@ -219,15 +214,50 @@ namespace HouseImaging
     }
 
 
-    public void Remove(int id)
+    public void Remove(int propId)
     {
-      PropertyItem prop = _get_property_item(id);
+      PropertyItem prop = _get_property_item(propId);
 
       if (prop != null)
       {
         // Attempt removing the property only if it exists
-        fSystemImage.RemovePropertyItem(id);
+        fSystemImage.RemovePropertyItem(propId);
       }
+    }
+
+
+    public bool Has(string propName)
+    {
+      int propId = MetadataLibrary.GetId(propName);
+      return Has(propId);
+    }
+
+
+    public object Read(string propName)
+    {
+      int propId = MetadataLibrary.GetId(propName);
+      return Read(propId);
+    }
+
+
+    public void Set(string propName, object value)
+    {
+      int propId = MetadataLibrary.GetId(propName);
+      Set(propId, value);
+    }
+
+
+    public void Set(string propName, byte[] data, MetadataType dataType = 0)
+    {
+      int propId = MetadataLibrary.GetId(propName);
+      Set(propId, data, dataType);
+    }
+
+
+    public void Remove(string propName)
+    {
+      int propId = MetadataLibrary.GetId(propName);
+      Remove(propId);
     }
 
 
@@ -314,7 +344,7 @@ namespace HouseImaging
   public class MetadataItem
   {
     public MetadataDefinition Definition;
-    public byte[] Data { get; set; }
+    public object Value { get; set; }
 
 
     public MetadataItem(MetadataDefinition defn)
@@ -348,12 +378,12 @@ namespace HouseImaging
         Definition = defn;
       }
 
-      Data = null;
+      Value = null;
 
       if (prop != null)
       {
         // Assume prop.Value.Length == prop.Len
-        Data = prop.Value;
+        Value = MetadataPortal.GetObject(prop);
 
         if (Definition.Id == -1)
         {
@@ -368,19 +398,152 @@ namespace HouseImaging
     }
 
 
+    private static string _fracToString(int numer, int denom)
+    {
+      string result;
+
+      if (numer == 0)
+      {
+        result = "0";
+      }
+      else if ((denom == 1) || (denom == 0))
+      {
+        result = numer + "";
+      }
+      else
+      {
+        result = numer + "/" + denom;
+      }
+
+      return result;
+    }
+
+
     public override string ToString()
     {
-      return MetadataFormat.FormatValue(Definition.DataType, Data);
+      if (Value == null)
+      {
+        return "?";
+      }
+      else if (Value is Int64)
+      {
+        int numer = (Int32)((Int64)Value & 0xFFFFFFFF);
+        int denom = (Int32)(((Int64)Value >> 32) & 0xFFFFFFFF);
+        return _fracToString(numer, denom);
+      }
+      else if (Value is UInt64)
+      {
+        int numer = (Int32)((UInt64)Value & 0xFFFFFFFF);
+        int denom = (Int32)(((UInt64)Value >> 32) & 0xFFFFFFFF);
+        return _fracToString(numer, denom);
+      }
+      else if (Value is byte[])
+      {
+        return StringTools.HexStringFromByteArray((byte[])Value);
+      }
+      else if (Value is Array)
+      {
+        string result = "";
+        string delimiter = "";
+
+        foreach (var item in Value as Array)
+        {
+          result += delimiter + item.ToString();
+          delimiter = ", ";
+        }
+
+        return result;
+      }
+      else if (Value is string)
+      {
+        return new string((Value as string).Where(c => !char.IsControl(c)).ToArray());
+      }
+      else
+      {
+        return Value.ToString();
+      }
     }
 
 
     public void FromString(string valueAsString)
     {
-      byte[] data = MetadataFormat.EncodeValue(Definition.DataType, valueAsString);
-
-      if (data != null)
+      switch (Definition.DataType)
       {
-        Data = data;
+        case MetadataType.String:
+          {
+            Value = valueAsString;
+          }
+          break;
+        case MetadataType.CharArray:
+          {
+            Value = valueAsString;
+          }
+          break;
+        case MetadataType.Unicode:
+          {
+            Value = new byte[0]; // TODO
+            // bytes = Encoding.Unicode.GetBytes(valueAsString + '\0');
+          }
+          break;
+        case MetadataType.IntU16:
+          {
+            string[] fields = valueAsString.Split(new Char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+            UInt16[] values = new UInt16[fields.Length];
+
+            for (int i = 0; i < fields.Length; i++)
+            {
+              values[i] = UInt16.Parse(fields[i]);
+            }
+
+            Value = values.Length == 1 ? (object)values[0] : (object)values;
+          }
+          break;
+        case MetadataType.IntU32:
+          {
+            string[] fields = valueAsString.Split(new Char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+            UInt32[] values = new UInt32[fields.Length];
+
+            for (int i = 0; i < fields.Length; i++)
+            {
+              values[i] = UInt32.Parse(fields[i]);
+            }
+
+            Value = values.Length == 1 ? (object)values[0] : (object)values;
+          }
+          break;
+        case MetadataType.IntS32:
+          {
+            string[] fields = valueAsString.Split(new Char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+            Int32[] values = new Int32[fields.Length];
+
+            for (int i = 0; i < fields.Length; i++)
+            {
+              values[i] = Int32.Parse(fields[i]);
+            }
+
+            Value = values.Length == 1 ? (object)values[0] : (object)values;
+          }
+          break;
+        case MetadataType.FracU32:
+          {
+            Value = new byte[0]; // TODO
+          }
+          break;
+        case MetadataType.FracS32:
+          {
+            Value = new byte[0]; // TODO
+          }
+          break;
+        case MetadataType.Byte:
+        case MetadataType.Undefined:
+        default:
+          {
+            Value = StringTools.ByteArrayFromHexString(valueAsString);
+          }
+          break;
       }
     }
   }
@@ -417,44 +580,32 @@ namespace HouseImaging
   {
     private const string RESOURCENAME = "HouseImaging.TagDefinitions.json";
 
-    private static Dictionary<int, MetadataDefinition> _table = _loadDefinitions();
+    private static MetadataLibrary _instance = new MetadataLibrary();
 
+    private Dictionary<int, MetadataDefinition> fIdDefLookup;
 
-    public static MetadataDefinition Lookup(int id)
-    {
-      return _table.ContainsKey(id) ? _table[id] : null;
-    }
+    private Dictionary<string, int> fNameIdLookup;
 
 
     public static void AddDefinition(MetadataDefinition defn)
     {
-      if (_table.ContainsKey(defn.Id) == false)
+      if (_instance.fIdDefLookup.ContainsKey(defn.Id) == false)
       {
-        _table.Add(defn.Id, defn);
+        // TODO: Test
+        _instance.fIdDefLookup.Add(defn.Id, defn);
+        _instance.fNameIdLookup.Add(defn.Category + "." + defn.Name, defn.Id);
       }
     }
 
 
-    public static List<MetadataDefinition> GetList()
+    private MetadataLibrary()
     {
-      List<MetadataDefinition> result = new List<MetadataDefinition>();
-
-      foreach (KeyValuePair<int, MetadataDefinition> kv in _table)
-      {
-        result.Add(kv.Value);
-      }
-
-      return result;
-    }
-
-
-    private static Dictionary<int, MetadataDefinition> _loadDefinitions()
-    {
-      Dictionary<int, MetadataDefinition> result = new Dictionary<int, MetadataDefinition>();
+      fIdDefLookup = new Dictionary<int, MetadataDefinition>();
+      fNameIdLookup = new Dictionary<string, int>();
 
       try
       {
-//        using (Stream stream = new FileStream("TagDefinitions.json", FileMode.Open, FileAccess.Read))
+        //        using (Stream stream = new FileStream("TagDefinitions.json", FileMode.Open, FileAccess.Read))
         using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(RESOURCENAME))
         {
           using (StreamReader reader = new StreamReader(stream))
@@ -471,355 +622,45 @@ namespace HouseImaging
                 defn.Category = "General";
               }
 
-              result.Add(defn.Id, defn);
+              fIdDefLookup.Add(defn.Id, defn);
+              fNameIdLookup.Add(defn.Category + "." + defn.Name, defn.Id);
             }
           }
         }
       }
-      catch
+      catch (Exception ex)
       {
-        result.Clear();
+        fIdDefLookup.Clear();
+        fNameIdLookup.Clear();
       }
-
-      return result;
     }
-  }
 
 
-  internal class MetadataFormat
-  {
-    private const string DOUBLETYPE_FORMAT = "0.0####";
-
-
-    public static string FormatValue(MetadataType type, byte[] bytes)
+    public static MetadataDefinition Lookup(int id)
     {
-      string strRet;
+      return _instance.fIdDefLookup.ContainsKey(id) ? _instance.fIdDefLookup[id] : null;
+    }
 
-      try
+
+    public static int GetId(string name)
+    {
+      return _instance.fNameIdLookup.ContainsKey(name) ? _instance.fNameIdLookup[name] : -1;
+    }
+
+
+    public static MetadataDefinition Lookup(string name)
+    {
+      return Lookup(GetId(name));
+    }
+
+
+    public static List<MetadataDefinition> GetList()
+    {
+      List<MetadataDefinition> result = new List<MetadataDefinition>();
+
+      foreach (KeyValuePair<int, MetadataDefinition> kv in _instance.fIdDefLookup)
       {
-        switch (type)
-        {
-          case MetadataType.Byte:
-            strRet = _formatTagByte(bytes);
-            break;
-          case MetadataType.String:
-            strRet = _formatTagString(bytes);
-            break;
-          case MetadataType.CharArray:
-            strRet = _formatTagCharArray(bytes);
-            break;
-          case MetadataType.Unicode:
-            strRet = _formatTagUnicode(bytes);
-            break;
-          case MetadataType.IntU16:
-            strRet = _formatTagUShort(bytes);
-            break;
-          case MetadataType.IntU32:
-            strRet = _formatTagULong(bytes);
-            break;
-          case MetadataType.IntS32:
-            strRet = _formatTagSLong(bytes);
-            break;
-          case MetadataType.FracU32:
-            strRet = _formatTagRational(bytes);
-            break;
-          case MetadataType.FracS32:
-            strRet = _formatTagSRational(bytes);
-            break;
-          case MetadataType.Undefined:
-          default:
-            strRet = _formatTagByte(bytes);
-            break;
-        }
-      }
-      catch
-      {
-        strRet = string.Empty;
-      }
-
-      return strRet;
-    }
-
-
-    public static byte[] EncodeValue(MetadataType type, string value)
-    {
-      byte[] bytes;
-
-      try
-      {
-        switch (type)
-        {
-          case MetadataType.Byte:
-            bytes = _encodeTagByte(value);
-            break;
-          case MetadataType.String:
-            bytes = _encodeTagString(value);
-            break;
-          case MetadataType.CharArray:
-            bytes = _encodeTagCharArray(value);
-            break;
-          case MetadataType.Unicode:
-            bytes = _encodeTagUnicode(value);
-            break;
-          case MetadataType.IntU16:
-            bytes = _encodeTagUShort(value);
-            break;
-          case MetadataType.IntU32:
-            bytes = _encodeTagULong(value);
-            break;
-          case MetadataType.IntS32:
-            bytes = _encodeTagSLong(value);
-            break;
-          case MetadataType.FracU32:
-            bytes = new byte[0];
-            break;
-          case MetadataType.FracS32:
-            bytes = new byte[0];
-            break;
-          case MetadataType.Undefined:
-          default:
-            bytes = _encodeTagByte(value);
-            break;
-        }
-      }
-      catch
-      {
-        bytes = null;
-      }
-
-      return bytes;
-    }
-
-
-    private static string _formatTagUnicode(byte[] bytes)
-    {
-      return Encoding.Unicode.GetString(bytes, 0, bytes.Length - 2);
-    }
-
-
-    private static byte[] _encodeTagUnicode(string value)
-    {
-      return Encoding.Unicode.GetBytes(value + '\0');
-    }
-
-
-    private static string _formatTagString(byte[] bytes)
-    {
-      string value2 = StringTools.StringFromByteArray(bytes, bytes.Length -1);
-      return new string(value2.Where(c => !char.IsControl(c)).ToArray());
-    }
-
-
-    private static byte[] _encodeTagString(string value)
-    {
-      return StringTools.ByteArrayFromString(value + '\0');
-    }
-
-
-    private static string _formatTagCharArray(byte[] bytes)
-    {
-      string value2 = StringTools.StringFromByteArray(bytes, bytes.Length);
-      return new string(value2.Where(c => !char.IsControl(c)).ToArray());
-    }
-
-
-    private static byte[] _encodeTagCharArray(string value)
-    {
-      return StringTools.ByteArrayFromString(value);
-    }
-
-
-    private static string _formatTagByte(byte[] bytes)
-    {
-      return StringTools.HexStringFromByteArray(bytes);
-    }
-
-
-    private static byte[] _encodeTagByte(string value)
-    {
-      return StringTools.ByteArrayFromHexString(value);
-    }
-
-
-    private static string _formatTagUShort(byte[] bytes)
-    {
-      string result = "";
-
-      for (int i = 0; i < bytes.Length; i = i + sizeof(UInt16))
-      {
-        if (string.IsNullOrEmpty(result) == false)
-        {
-          result += " ";
-        }
-
-        UInt16 val = BitConverter.ToUInt16(bytes, i);
-        result += val.ToString();
-      }
-      return result;
-    }
-
-
-    private static byte[] _encodeTagUShort(string value)
-    {
-      string[] fields = value.Split(new Char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-
-      UInt16[] values = new UInt16[fields.Length];
-
-      for (int i = 0; i < fields.Length; i++)
-      {
-        values[i] = UInt16.Parse(fields[i]);
-      }
-
-      byte[] result = new byte[values.Length * sizeof(UInt16)];
-      Buffer.BlockCopy(values, 0, result, 0, result.Length);
-
-      return result;
-    }
-
-
-    private static string _formatTagULong(byte[] bytes)
-    {
-      string result = "";
-
-      for (int i = 0; i < bytes.Length; i = i + sizeof(UInt32))
-      {
-        if (string.IsNullOrEmpty(result) == false)
-        {
-          result += " ";
-        }
-
-        UInt32 val = BitConverter.ToUInt32(bytes, i);
-        result += val.ToString();
-      }
-      return result;
-    }
-
-
-    private static byte[] _encodeTagULong(string value)
-    {
-      string[] fields = value.Split(new Char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-
-      UInt32[] values = new UInt32[fields.Length];
-
-      for (int i = 0; i < fields.Length; i++)
-      {
-        values[i] = UInt32.Parse(fields[i]);
-      }
-
-      byte[] result = new byte[values.Length * sizeof(UInt32)];
-      Buffer.BlockCopy(values, 0, result, 0, result.Length);
-
-      return result;
-    }
-
-
-    private static string _formatTagSLong(byte[] bytes)
-    {
-      string result = "";
-
-      for (int i = 0; i < bytes.Length; i = i + sizeof(Int32))
-      {
-        if (string.IsNullOrEmpty(result) == false)
-        {
-          result += " ";
-        }
-
-        Int32 val = BitConverter.ToInt32(bytes, i);
-        result += val.ToString();
-      }
-      return result;
-    }
-
-
-    private static byte[] _encodeTagSLong(string value)
-    {
-      string[] fields = value.Split(new Char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-
-      Int32[] values = new Int32[fields.Length];
-
-      for (int i = 0; i < fields.Length; i++)
-      {
-        values[i] = Int32.Parse(fields[i]);
-      }
-
-      byte[] result = new byte[values.Length * sizeof(Int32)];
-      Buffer.BlockCopy(values, 0, result, 0, result.Length);
-
-      return result;
-    }
-
-
-    private static string _formatTagRational(byte[] bytes, bool decimalFormat = false)
-    {
-      string result = "";
-
-      for (int i = 0; i < bytes.Length; i = i + 2 * sizeof(UInt32))
-      {
-        if (string.IsNullOrEmpty(result) == false)
-        {
-          result += " ";
-        }
-
-        System.UInt32 numer = BitConverter.ToUInt32(bytes, i);
-        System.UInt32 denom = BitConverter.ToUInt32(bytes, i + sizeof(UInt32));
-
-        if (decimalFormat)
-        {
-          double dbl = denom == 0 ? 0.0 : (double)numer / (double)denom;
-          result += dbl.ToString(DOUBLETYPE_FORMAT);
-        }
-        else
-        {
-          result += _fracToString((int)numer, (int)denom);
-        }
-      }
-      return result;
-    }
-
-
-    private static string _formatTagSRational(byte[] bytes, bool decimalFormat = false)
-    {
-      string result = "";
-
-      for (int i = 0; i < bytes.Length; i = i + 2 * sizeof(Int32))
-      {
-        if (string.IsNullOrEmpty(result) == false)
-        {
-          result += " ";
-        }
-
-        System.Int32 numer = BitConverter.ToInt32(bytes, i);
-        System.Int32 denom = BitConverter.ToInt32(bytes, i + sizeof(Int32));
-
-        if (decimalFormat)
-        {
-          double dbl = denom == 0 ? 0.0 : (double)numer / (double)denom;
-          result += dbl.ToString(DOUBLETYPE_FORMAT);
-        }
-        else
-        {
-          result += _fracToString(numer, denom);
-        }
-      }
-      return result;
-    }
-
-
-    private static string _fracToString(int numer, int denom)
-    {
-      string result;
-
-      if (numer == 0)
-      {
-        result = "0";
-      }
-      else if ((denom == 1) || (denom == 0))
-      {
-        result = numer + "";
-      }
-      else
-      {
-        result = numer + "/" + denom;
+        result.Add(kv.Value);
       }
 
       return result;

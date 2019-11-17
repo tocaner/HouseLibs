@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using Fingerprint = HouseUtils.Checksum.Fingerprint;
@@ -236,15 +237,30 @@ namespace HouseImaging
     }
 
 
+    public DateTime GetDateTaken()
+    {
+      DateTime result;
+
+      if (DateTime.TryParseExact((string)Metadata.Read("Origin.DateTime"), "yyyy:MM:dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out result) == false)
+      {
+        result = DateTime.MinValue;
+      }
+
+      return result;
+    }
+
+
     public Orientation GetOrientation()
     {
-      return Orientation.FromExif(Metadata.Read_ExifOrientation());
+      object value = Metadata.Read("Image.Orientation");
+      return Orientation.FromExif(value != null ? (int)(UInt16)value : -1);
     }
 
 
     public Orientation GetThumbnailOrientation()
     {
-      return Orientation.FromExif(Metadata.Read_ExifThumbnailOrientation());
+      object value = Metadata.Read("Thumbnail.Orientation");
+      return Orientation.FromExif(value != null ? (int)(UInt16)value : -1);
     }
 
 
@@ -256,7 +272,7 @@ namespace HouseImaging
 
     public ImageInfo ExtractEmbeddedThumbnail()
     {
-      byte[] data = Metadata.Read_ThumbnailBytes();
+      byte[] data =(byte[])Metadata.Read("Thumbnail.Data");
 
       if ((data != null) && (data.Length > 0))
       {
