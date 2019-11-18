@@ -130,6 +130,16 @@ namespace HouseImaging
         bytes = BitConverter.GetBytes((UInt16)value);
         type = MetadataType.IntU16;
       }
+      else if (value is UInt32)
+      {
+        bytes = BitConverter.GetBytes((UInt32)value);
+        type = MetadataType.IntU32;
+      }
+      else if (value is Int32)
+      {
+        bytes = BitConverter.GetBytes((Int32)value);
+        type = MetadataType.IntS32;
+      }
       else if (value is string)
       {
         // ToDo: If Char Array no '\0'
@@ -186,34 +196,6 @@ namespace HouseImaging
     }
 
 
-    public void Set(int propId, byte[] data, MetadataType dataType = 0)
-    {
-      PropertyItem prop = _get_property_item(propId);
-
-      if (prop == null)
-      {
-        prop = CreatePropertyItem(propId);
-      }
-
-      if (prop != null)
-      {
-        if (dataType == 0)
-        {
-          // Keep default prop.Type
-        }
-        else
-        {
-          prop.Type = (short)(((short)dataType) & 0xFF);
-        }
-
-        prop.Value = data;
-        prop.Len = data.Length;
-
-        fSystemImage.SetPropertyItem(prop);
-      }
-    }
-
-
     public void Remove(int propId)
     {
       PropertyItem prop = _get_property_item(propId);
@@ -244,13 +226,6 @@ namespace HouseImaging
     {
       int propId = MetadataLibrary.GetId(propName);
       Set(propId, value);
-    }
-
-
-    public void Set(string propName, byte[] data, MetadataType dataType = 0)
-    {
-      int propId = MetadataLibrary.GetId(propName);
-      Set(propId, data, dataType);
     }
 
 
@@ -343,7 +318,7 @@ namespace HouseImaging
 
   public class MetadataItem
   {
-    public MetadataDefinition Definition;
+    public MetadataDefinition Definition { get; set; }
     public object Value { get; set; }
 
 
