@@ -142,7 +142,7 @@ namespace HouseImaging
       }
       else if (value is string)
       {
-        // ToDo: If Char Array no '\0'
+        // TODO: If Char Array no '\0'
         bytes = StringTools.ByteArrayFromString((value as string) + '\0');
         type = MetadataType.String;
       }
@@ -255,7 +255,23 @@ namespace HouseImaging
 
       foreach (PropertyItem prop in fSystemImage.PropertyItems)
       {
-        result.Add(new MetadataItem(prop));
+        MetadataDefinition defn = MetadataLibrary.Lookup(prop.Id);
+
+        if (defn == null)
+        {
+          defn = new MetadataDefinition()
+          {
+            Id = prop.Id,
+            Name = "?",
+            Category = "Unknown Tags",
+            Description = string.Empty,
+            DataType = prop.Type != 0 ? (MetadataType)prop.Type : MetadataType.Undefined
+          };
+        }
+
+        object value = GetObject(prop);
+
+        result.Add(new MetadataItem(defn, value));
       }
 
       return result;
@@ -322,54 +338,10 @@ namespace HouseImaging
     public object Value { get; set; }
 
 
-    public MetadataItem(MetadataDefinition defn)
-      : this(null, defn)
-    { }
-
-
-    public MetadataItem(PropertyItem prop = null, MetadataDefinition defn = null)
+    public MetadataItem(MetadataDefinition defn, object value = null)
     {
-      if (defn == null)
-      {
-        if (prop != null)
-        {
-          defn = MetadataLibrary.Lookup(prop.Id);
-        }
-      }
-
-      if (defn == null)
-      {
-        Definition = new MetadataDefinition()
-        {
-          Id = -1,
-          Name = "?",
-          Category = "Unknown Tags",
-          Description = string.Empty,
-          DataType = MetadataType.Undefined
-        };
-      }
-      else
-      {
-        Definition = defn;
-      }
-
-      Value = null;
-
-      if (prop != null)
-      {
-        // Assume prop.Value.Length == prop.Len
-        Value = MetadataPortal.GetObject(prop);
-
-        if (Definition.Id == -1)
-        {
-          Definition.Id = prop.Id;
-        }
-
-        if ((Definition.DataType == MetadataType.Undefined) && (prop.Type != 0))
-        {
-          Definition.DataType = (MetadataType)prop.Type;
-        }
-      }
+      Definition = defn;
+      Value = value;
     }
 
 
@@ -566,7 +538,6 @@ namespace HouseImaging
     {
       if (_instance.fIdDefLookup.ContainsKey(defn.Id) == false)
       {
-        // TODO: Test
         _instance.fIdDefLookup.Add(defn.Id, defn);
         _instance.fNameIdLookup.Add(defn.Category + "." + defn.Name, defn.Id);
       }
