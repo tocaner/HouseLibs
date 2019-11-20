@@ -48,6 +48,10 @@
   <ItemGroup>
     <Compile Include="Imaging.ImageFormats.cs" />
     <Compile Include="Imaging.Metadata.cs" />
+    <Compile Include="Imaging.Wpf.ImageFormats.cs" />
+    <Compile Include="Imaging.Wpf.ImageInfo.cs" />
+    <Compile Include="Imaging.Wpf.ImageTools.cs" />
+    <Compile Include="Imaging.Wpf.Metadata.cs" />
     <Compile Include="Imaging.WpfTools.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Imaging.ImageInfo.cs" />
