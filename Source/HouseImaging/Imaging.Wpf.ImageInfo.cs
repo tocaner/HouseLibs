@@ -15,14 +15,14 @@ namespace HouseImaging.Wpf
 {
   public class ImageInfo : IDisposable
   {
-    private ImageSource fSystemImage = null;
+    private BitmapSource fSystemImage = null;
     private Fingerprint fFingerprint = null;
     private MetadataPortal fMetadata = null;
 
 
     public ImageInfo(ImageSource image)
     {
-      fSystemImage = image;
+      fSystemImage = image as BitmapSource;
     }
 
 
@@ -31,9 +31,24 @@ namespace HouseImaging.Wpf
     }
 
 
+    public static ImageInfo FromFile(string filename)
+    {
+      try
+      {
+        ImageSource image = BitmapFrame.Create(new Uri(filename),
+          BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnDemand);
+        return new ImageInfo(image);
+      }
+      catch
+      {
+        return null;
+      }
+    }
+
+
     public SizePixels SizePixels
     {
-      get { return new SizePixels((int)fSystemImage.Width, (int)fSystemImage.Height); }
+      get { return new SizePixels(fSystemImage.PixelWidth, fSystemImage.PixelHeight); }
     }
 
 
@@ -61,7 +76,7 @@ namespace HouseImaging.Wpf
     {
       if (fFingerprint == null)
       {
-        byte[] imageData = ImageTools.ExtractPixelBytesFromBitmap(fSystemImage as BitmapSource);
+        byte[] imageData = ImageTools.ExtractPixelBytesFromBitmap(fSystemImage);
         fFingerprint = new Fingerprint(imageData);
       }
 
@@ -83,13 +98,13 @@ namespace HouseImaging.Wpf
 
     public string GetPixelFormat()
     {
-      return (fSystemImage as BitmapFrame).Format.ToString();
+      return fSystemImage.Format.ToString();
     }
 
 
     public int GetPixelFormatBitsPerPixel()
     {
-      return (fSystemImage as BitmapFrame).Format.BitsPerPixel;
+      return fSystemImage.Format.BitsPerPixel;
     }
 
 
@@ -101,7 +116,8 @@ namespace HouseImaging.Wpf
       {
         case ImageFormatEnum.Jpeg:
           {
-            result = ((fSystemImage.Height % 16) == 0) && ((fSystemImage.Width % 16) == 0);
+            SizePixels size = this.SizePixels;
+            result = ((size.Height % 16) == 0) && ((size.Width % 16) == 0);
           }
           break;
 
@@ -158,8 +174,29 @@ namespace HouseImaging.Wpf
     public ImageInfo GetTransformedImage(Orientation index)
     {
       Transform transform = TransformFromOrientation(index);
-      TransformedBitmap result = new TransformedBitmap((BitmapSource)fSystemImage, transform);
+      TransformedBitmap result = new TransformedBitmap(fSystemImage, transform);
       return new ImageInfo(result);
+    }
+
+
+    public void SaveImageToFile(string filename, Orientation index, int quality = 80)
+    {
+      BitmapEncoder encoder = ImageTools.GetEncoder(filename);
+
+      BitmapSource source;
+
+      if (encoder is JpegBitmapEncoder)
+      {
+        source = fSystemImage;
+        (encoder as JpegBitmapEncoder).QualityLevel = quality;
+        // TODO: Set Flips and Rotation
+      }
+      else
+      {
+        source = GetTransformedImage(index).GetSystemImageSource() as BitmapSource;
+      }
+
+      ImageTools.ImageSourceToFile(source, encoder, filename);
     }
 
 
@@ -167,7 +204,9 @@ namespace HouseImaging.Wpf
     {
       DateTime result;
 
-      if (DateTime.TryParseExact((string)Metadata.Read("Origin.DateTime"), "yyyy:MM:dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out result) == false)
+      string dateString = Metadata.Read("DateTaken").ToString();
+
+      if (DateTime.TryParseExact(dateString, "yyyy:MM:dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out result) == false)
       {
         result = DateTime.MinValue;
       }
@@ -178,11 +217,11 @@ namespace HouseImaging.Wpf
 
     public Orientation GetOrientation()
     {
-      var res = Metadata.Read("Image.Orientation");
+      object value = Metadata.Read("Orientation").Value;
 
-      if (res != null)
+      if (value != null)
       {
-        return Orientation.FromExif((int)(UInt16)res);
+        return Orientation.FromExif((int)(UInt16)value);
       }
       else
       {
@@ -193,11 +232,11 @@ namespace HouseImaging.Wpf
 
     public Orientation GetThumbnailOrientation()
     {
-      var res = Metadata.Read("Tumbnail.Orientation");
+      object value = Metadata.Read("Thumbnail.Orientation").Value;
 
-      if (res != null)
+      if (value != null)
       {
-        return Orientation.FromExif((int)(UInt16)res);
+        return Orientation.FromExif((int)(UInt16)value);
       }
       else
       {

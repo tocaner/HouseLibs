@@ -24,6 +24,13 @@ namespace HouseUtils
     }
 
 
+    public static Dictionary<string, object> Deserialize(string text)
+    {
+      var ser = new JavaScriptSerializer();
+      return ser.Deserialize<dynamic>(text);
+    }
+
+
     public static string Serialize2(object data)
     {
       var ser = new JavaScriptSerializer();

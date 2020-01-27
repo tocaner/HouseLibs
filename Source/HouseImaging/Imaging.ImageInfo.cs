@@ -241,7 +241,9 @@ namespace HouseImaging
     {
       DateTime result;
 
-      if (DateTime.TryParseExact((string)Metadata.Read("Origin.DateTime"), "yyyy:MM:dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out result) == false)
+      string dateString = Metadata.Read("DateTaken").ToString();
+
+      if (DateTime.TryParseExact(dateString, "yyyy:MM:dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out result) == false)
       {
         result = DateTime.MinValue;
       }
@@ -252,14 +254,14 @@ namespace HouseImaging
 
     public Orientation GetOrientation()
     {
-      object value = Metadata.Read("Image.Orientation");
+      object value = Metadata.Read("Orientation").Value;
       return Orientation.FromExif(value != null ? (int)(UInt16)value : -1);
     }
 
 
     public Orientation GetThumbnailOrientation()
     {
-      object value = Metadata.Read("Thumbnail.Orientation");
+      object value = Metadata.Read("Thumbnail.Orientation").Value;
       return Orientation.FromExif(value != null ? (int)(UInt16)value : -1);
     }
 
@@ -270,9 +272,9 @@ namespace HouseImaging
     }
 
 
-    public ImageInfo ExtractEmbeddedThumbnail()
+    public ImageInfo ExtractThumbnail()
     {
-      byte[] data =(byte[])Metadata.Read("Thumbnail.Data");
+      byte[] data =(byte[])Metadata.Read("Thumbnail.Data").Value;
 
       if ((data != null) && (data.Length > 0))
       {

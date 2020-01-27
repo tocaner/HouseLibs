@@ -12,10 +12,52 @@ namespace HouseImaging.Wpf
 {
   public class ImageTools
   {
-    public static void ImageSourceToPngFile(BitmapSource bitmapSource, string filePath)
+    public static BitmapEncoder GetEncoder(ImageFormatEnum format)
     {
-      BitmapEncoder encoder = new PngBitmapEncoder();
-      ImageSourceToFile(bitmapSource, new PngBitmapEncoder(), filePath);
+      switch (format)
+      {
+        case ImageFormatEnum.Jpeg: return new JpegBitmapEncoder();
+        case ImageFormatEnum.Bmp: return new BmpBitmapEncoder();
+        case ImageFormatEnum.Gif: return new GifBitmapEncoder();
+        case ImageFormatEnum.Png: return new PngBitmapEncoder();
+        case ImageFormatEnum.Tiff: return new TiffBitmapEncoder();
+        case ImageFormatEnum.Icon: return new PngBitmapEncoder(); // There is no IconBitmapEncoder
+        case ImageFormatEnum.Wmp: return new WmpBitmapEncoder();
+        default: return null;
+      }
+    }
+
+
+    public static BitmapEncoder GetEncoder(string filePath)
+    {
+      return GetEncoder(ImageFormat.FromPath(filePath));
+    }
+
+
+    public static void ImageSourceToFile(BitmapSource bitmapSource, string filePath, ImageFormatEnum format = ImageFormatEnum.Unknown)
+    {
+      ImageFormatEnum extFormat = ImageFormat.FromPath(filePath);
+
+      if (format == ImageFormatEnum.Unknown)
+      {
+        // If format is not specified, then use file extension to determine the target format
+        format = extFormat; 
+      }
+
+      if (format == ImageFormatEnum.Unknown)
+      {
+        // If format could not be resolved, use Png as default format
+        format = ImageFormatEnum.Png;
+      }
+
+      if (extFormat != format)
+      {
+        // If specified format mismatches the file extension, then replace the file extension
+        filePath = Path.ChangeExtension(filePath, format.GetExtension()); 
+      }
+      
+      BitmapEncoder encoder = ImageTools.GetEncoder(format);
+      ImageSourceToFile(bitmapSource, encoder, filePath);
     }
 
 

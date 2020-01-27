@@ -27,65 +27,134 @@ namespace HouseImaging.Wpf
     }
 
 
-    private string Query(int propId)
+    private string Query(MetadataDefinition defn)
     {
-      return string.Format("/app1/{{ushort=0}}/{{ushort={0}}}", propId);
+      string result;
+
+      if (defn != null)
+      {
+        try
+        {
+          switch (defn.FullDir.ToUpper())
+          {
+            case "APP0":
+              result = string.Format("/app0/{{ushort={0}}}", defn.Code);
+              break;
+
+            case "APP1":
+              result = string.Format("/app1/{{ushort=0}}/{{ushort={0}}}", defn.Code);
+              break;
+
+            case "APP1.THUMBNAIL":
+              result = string.Format("/app1/{{ushort=1}}/{{ushort={0}}}", defn.Code);
+              break;
+
+            case "APP1.EXIF":
+              result = string.Format("/app1/{{ushort=0}}/{{ushort=34665}}/{{ushort={0}}}", defn.Code);
+              break;
+
+            case "APP1.GPS":
+              result = string.Format("/app1/{{ushort=0}}/{{ushort=34853}}/{{ushort={0}}}", defn.Code);
+              break;
+
+            default:
+              result = string.Format("/app1/{{ushort=0}}/{{ushort={0}}}", defn.Code);
+              break;
+          }
+        }
+        catch (Exception ex)
+        {
+          Console.WriteLine(ex.Message);
+          result = string.Empty;
+        }
+      }
+      else
+      {
+        result = string.Empty;
+      }
+
+      return result;
     }
 
 
-    public bool Has(int propId)
+    private MetadataDefinition Lookup(string propName)
     {
-      string query = Query(propId);
+      MetadataDefinition result;
+
+      string[] parts = propName.Split('.');
+
+      if ((parts.Length > 1) && (parts[0] == "Thumbnail"))
+      {
+        result = MetadataLibrary.Lookup(parts.Last());
+        result.Section = parts[0];
+      }
+      else
+      {
+        result = MetadataLibrary.Lookup(propName);
+      }
+
+      return result;
+    }
+
+
+    public bool Has(MetadataDefinition defn)
+    {
+      string query = Query(defn);
       return fNewMetadata.ContainsQuery(query);
-    }
-
-
-    public void Remove(int propId)
-    {
-      string query = Query(propId);
-      fNewMetadata.RemoveQuery(query);
-    }
-
-
-    public object Read(int propId)
-    {
-      string query = Query(propId);
-      return fNewMetadata.GetQuery(query);
-    }
-
-
-    public void Set(int propId, object value)
-    {
-      string query = Query(propId);
-      fNewMetadata.SetQuery(query, value);
     }
 
 
     public bool Has(string propName)
     {
-      int id = MetadataLibrary.GetId(propName);
-      return Has(id);
+      return Has(Lookup(propName));
+    }
+
+
+    public void Remove(MetadataDefinition defn)
+    {
+      string query = Query(defn);
+      fNewMetadata.RemoveQuery(query);
     }
 
 
     public void Remove(string propName)
     {
-      int id = MetadataLibrary.GetId(propName);
-      Remove(id);
+      Remove(Lookup(propName));
     }
 
 
-    public object Read(string propName)
+    public MetadataItem Read(MetadataDefinition defn)
     {
-      int id = MetadataLibrary.GetId(propName);
-      return Read(id);
+      string query = Query(defn);
+      object value = fNewMetadata.GetQuery(query);
+      return new MetadataItem(defn, value);
+    }
+
+
+    public MetadataItem Read(string propName)
+    {
+      return Read(Lookup(propName));
+    }
+
+
+    public void Set(MetadataDefinition defn, object value)
+    {
+      string query = Query(defn);
+      fNewMetadata.SetQuery(query, value);
     }
 
 
     public void Set(string propName, object value)
     {
-      int id = MetadataLibrary.GetId(propName);
-      Set(id, value);
+      Set(Lookup(propName), value);
+    }
+
+
+    public List<MetadataItem> GetList()
+    {
+      List<MetadataItem> result = new List<MetadataItem>();
+      CaptureMetadata(result, this.fNewMetadata, "");
+      return result;
     }
 
 
@@ -99,18 +168,15 @@ namespace HouseImaging.Wpf
         {
           string fullQuery = query + relativeQuery;
           object resp = bitmapMetadata.GetQuery(relativeQuery);
-
-          MetadataDefinition defn = new MetadataDefinition()
-          {
-            Category = "Category",
-            Name = resp.GetType().ToString(),
-            Path = fullQuery
-          };
-
-          MetadataItem metadataItem = new MetadataItem(defn, resp);
-          result.Add(metadataItem);
           BitmapMetadata innerBitmapMetadata = resp as BitmapMetadata;
-          if (innerBitmapMetadata != null)
+
+          if (innerBitmapMetadata == null)
+          {
+            MetadataDefinition defn = GetMetadataDefinitionFromQuery(fullQuery);
+            MetadataItem metadataItem = new MetadataItem(defn, resp);
+            result.Add(metadataItem);
+          }
+          else
           {
             CaptureMetadata(result, innerBitmapMetadata, fullQuery);
           }
@@ -119,10 +185,88 @@ namespace HouseImaging.Wpf
     }
 
 
-    public List<MetadataItem> GetList()
+    private static string[,] fTable = new string[,]
     {
-      List<MetadataItem> result = new List<MetadataItem>();
-      CaptureMetadata(result, this.fNewMetadata, "");
+      // Path                                 // Directory    // Section 
+      { "/app1/{ushort=0}/{ushort=34665}/",    "APP1",         "EXIF"      },
+      { "/app1/{ushort=0}/{ushort=34853}/",    "APP1",         "GPS"       },
+      { "/app1/{ushort=0}/",                   "APP1",         ""          },
+      { "/app1/{ushort=1}/",                   "APP1",         "THUMBNAIL" },
+      { "/app1/",                              "APP1",         ""          },
+      { "/app0/",                              "APP0",         ""          },
+      { "/chrominance/",                       "JPEG",         ""          },
+      { "/luminance/",                         "JPEG",         ""          },
+    };
+
+
+    private MetadataDefinition GetMetadataDefinitionFromQuery(string path)
+    {
+      MetadataDefinition result = null;
+
+      string name = "name?";
+      string directory = "directory?";
+      string section = "";
+      int code = -1;
+
+      switch (fImageInfo.GetImageFormat())
+      {
+        case ImageFormatEnum.Jpeg:
+          {
+            for (int i = 0; i < fTable.GetLength(0); i++)
+            {
+              if (path.StartsWith(fTable[i, 0]))
+              {
+                name = path.Substring(fTable[i, 0].Length);
+                directory = fTable[i, 1];
+                section = fTable[i, 2];
+
+                try
+                {
+                  string[] p = name.Split(new string[] { "{ushort=", "}" }, System.StringSplitOptions.RemoveEmptyEntries);
+                  code = UInt16.Parse(p[0]);
+
+                  // Try finding the definition in dictionary
+                  result = MetadataLibrary.Lookup(code, directory);
+
+                  if (result != null)
+                  {
+                    result.Section = section;
+                  }
+                }
+                catch
+                {
+                  code = -1;
+                }
+                break;
+              }
+            }
+          }
+          break;
+
+        case ImageFormatEnum.Gif:
+          // TODO
+        case ImageFormatEnum.Tiff:
+          // TODO
+        case ImageFormatEnum.Png:
+          // TODO
+        default:
+          break;
+      }
+
+      if (result == null)
+      {
+        result = new MetadataDefinition()
+        {
+          Code = code,
+          Section = section,
+          Name = name,
+          Directory = directory,
+          DataType = 0,
+          Description = string.Empty
+        };
+      }
+
+      result.Path = path;
       return result;
     }
   }

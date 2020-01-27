@@ -22,98 +22,102 @@ namespace HouseImaging
     }
 
 
-    private PropertyItem _get_property_item(int propId)
+    private PropertyItem _get_property_item(MetadataDefinition defn)
     {
-      return fSystemImage.PropertyItems.FirstOrDefault(item => item.Id == propId);
+      return defn != null ? fSystemImage.PropertyItems.FirstOrDefault(item => item.Id == defn.Code) : null;
     }
 
 
     public static object GetObject(PropertyItem prop)
     {
       object result = null;
-      MetadataType dataType = (MetadataType)prop.Type;
-      byte[] data = prop.Value;
 
-      switch (dataType)
+      if (prop != null)
       {
-        case MetadataType.String:
-          {
-            result = StringTools.StringFromByteArray(data, data.Length - 1);
-          }
-          break;
-        case MetadataType.CharArray:
-          {
-            result = StringTools.StringFromByteArray(data, data.Length);
-          }
-          break;
-        case MetadataType.Unicode:
-          {
-            result = Encoding.Unicode.GetString(data, 0, data.Length - 2); // TODO
-          }
-          break;
-        case MetadataType.IntU16:
-          {
-            UInt16[] array = new UInt16[data.Length / sizeof(UInt16)];
-            for (int i = 0; i < array.Length; i++)
+        MetadataType dataType = (MetadataType)prop.Type;
+        byte[] data = prop.Value;
+
+        switch (dataType)
+        {
+          case MetadataType.String:
             {
-              array[i] = BitConverter.ToUInt16(data, i * sizeof(UInt16));
+              result = StringTools.StringFromByteArray(data, data.Length - 1);
             }
-            result = array.Length == 1 ? (object)array[0] : (object)array;
-          }
-          break;
-        case MetadataType.IntU32:
-          {
-            UInt32[] array = new UInt32[data.Length / sizeof(UInt32)];
-            for (int i = 0; i < array.Length; i++)
+            break;
+          case MetadataType.CharArray:
             {
-              array[i] = BitConverter.ToUInt32(data, i * sizeof(UInt32));
+              result = StringTools.StringFromByteArray(data, data.Length);
             }
-            result = array.Length == 1 ? (object)array[0] : (object)array;
-          }
-          break;
-        case MetadataType.IntS32:
-          {
-            Int32[] array = new Int32[data.Length / sizeof(Int32)];
-            for (int i = 0; i < array.Length; i++)
+            break;
+          case MetadataType.Unicode:
             {
-              array[i] = BitConverter.ToInt32(data, i * sizeof(Int32));
+              result = Encoding.Unicode.GetString(data, 0, data.Length - 2);
             }
-            result = array.Length == 1 ? (object)array[0] : (object)array;
-          }
-          break;
-        case MetadataType.FracU32:
-          {
-            UInt64[] array = new UInt64[data.Length / (2 * sizeof(UInt32))];
-            for (int i = 0; i < array.Length; i++)
+            break;
+          case MetadataType.IntU16:
             {
-              int pos = i * 2 * sizeof(UInt32);
-              UInt32 numer = BitConverter.ToUInt32(data, pos);
-              UInt32 denom = BitConverter.ToUInt32(data, pos + sizeof(UInt32));
-              array[i] = ((((UInt64)denom) << 32) | numer);
+              UInt16[] array = new UInt16[data.Length / sizeof(UInt16)];
+              for (int i = 0; i < array.Length; i++)
+              {
+                array[i] = BitConverter.ToUInt16(data, i * sizeof(UInt16));
+              }
+              result = array.Length == 1 ? (object)array[0] : (object)array;
             }
-            result = array.Length == 1 ? (object)array[0] : (object)array;
-          }
-          break;
-        case MetadataType.FracS32:
-          {
-            Int64[] array = new Int64[data.Length / (2 * sizeof(Int32))];
-            for (int i = 0; i < array.Length; i++)
+            break;
+          case MetadataType.IntU32:
             {
-              int pos = i * 2 * sizeof(Int32);
-              Int32 numer = BitConverter.ToInt32(data, pos);
-              Int32 denom = BitConverter.ToInt32(data, pos + sizeof(Int32));
-              array[i] = ((((Int64)(UInt32)denom) << 32) | (UInt32)numer);
+              UInt32[] array = new UInt32[data.Length / sizeof(UInt32)];
+              for (int i = 0; i < array.Length; i++)
+              {
+                array[i] = BitConverter.ToUInt32(data, i * sizeof(UInt32));
+              }
+              result = array.Length == 1 ? (object)array[0] : (object)array;
             }
-            result = array.Length == 1 ? (object)array[0] : (object)array;
-          }
-          break;
-        case MetadataType.Byte:
-        case MetadataType.Undefined:
-        default:
-          {
-            result = data != null ? ArrayTools.DuplicateByteArray(data) : null;
-          }
-          break;
+            break;
+          case MetadataType.IntS32:
+            {
+              Int32[] array = new Int32[data.Length / sizeof(Int32)];
+              for (int i = 0; i < array.Length; i++)
+              {
+                array[i] = BitConverter.ToInt32(data, i * sizeof(Int32));
+              }
+              result = array.Length == 1 ? (object)array[0] : (object)array;
+            }
+            break;
+          case MetadataType.FracU32:
+            {
+              UInt64[] array = new UInt64[data.Length / (2 * sizeof(UInt32))];
+              for (int i = 0; i < array.Length; i++)
+              {
+                int pos = i * 2 * sizeof(UInt32);
+                UInt32 numer = BitConverter.ToUInt32(data, pos);
+                UInt32 denom = BitConverter.ToUInt32(data, pos + sizeof(UInt32));
+                array[i] = ((((UInt64)denom) << 32) | numer);
+              }
+              result = array.Length == 1 ? (object)array[0] : (object)array;
+            }
+            break;
+          case MetadataType.FracS32:
+            {
+              Int64[] array = new Int64[data.Length / (2 * sizeof(Int32))];
+              for (int i = 0; i < array.Length; i++)
+              {
+                int pos = i * 2 * sizeof(Int32);
+                Int32 numer = BitConverter.ToInt32(data, pos);
+                Int32 denom = BitConverter.ToInt32(data, pos + sizeof(Int32));
+                array[i] = ((((Int64)(UInt32)denom) << 32) | (UInt32)numer);
+              }
+              result = array.Length == 1 ? (object)array[0] : (object)array;
+            }
+            break;
+          case MetadataType.Byte:
+          case MetadataType.Undefined:
+          default:
+            {
+              result = data != null ? ArrayTools.DuplicateByteArray(data) : null;
+            }
+            break;
+        }
       }
 
       return result;
@@ -158,34 +162,41 @@ namespace HouseImaging
     }
 
 
-    public bool Has(int propId)
+    public bool Has(MetadataDefinition defn)
     {
-      return _get_property_item(propId) != null;
+      return _get_property_item(defn) != null;
     }
 
 
-    public object Read(int propId)
+    public bool Has(string propName)
     {
-      object result = null;
-
-      PropertyItem prop = _get_property_item(propId);
-
-      if (prop != null)
-      {
-        result = GetObject(prop);
-      }
-
-      return result;
+      MetadataDefinition defn = MetadataLibrary.Lookup(propName);
+      return Has(defn);
     }
 
 
-    public void Set(int propId, object value)
+    public MetadataItem Read(MetadataDefinition defn)
     {
-      PropertyItem prop = _get_property_item(propId);
+      PropertyItem prop = _get_property_item(defn);
+      object value = GetObject(prop);
+      return new MetadataItem(defn, value);
+    }
+
+
+    public MetadataItem Read(string propName)
+    {
+      MetadataDefinition defn = MetadataLibrary.Lookup(propName);
+      return Read(defn);
+    }
+
+
+    public void Set(MetadataDefinition defn, object value)
+    {
+      PropertyItem prop = _get_property_item(defn);
 
       if (prop == null)
       {
-        prop = CreatePropertyItem(propId);
+        prop = CreatePropertyItem(defn.Code);
       }
 
       if (prop != null)
@@ -196,43 +207,29 @@ namespace HouseImaging
     }
 
 
-    public void Remove(int propId)
+    public void Set(string propName, object value)
     {
-      PropertyItem prop = _get_property_item(propId);
+      MetadataDefinition defn = MetadataLibrary.Lookup(propName);
+      Set(defn, value);
+    }
+
+
+    public void Remove(MetadataDefinition defn)
+    {
+      PropertyItem prop = _get_property_item(defn);
 
       if (prop != null)
       {
         // Attempt removing the property only if it exists
-        fSystemImage.RemovePropertyItem(propId);
+        fSystemImage.RemovePropertyItem(prop.Id);
       }
-    }
-
-
-    public bool Has(string propName)
-    {
-      int propId = MetadataLibrary.GetId(propName);
-      return Has(propId);
-    }
-
-
-    public object Read(string propName)
-    {
-      int propId = MetadataLibrary.GetId(propName);
-      return Read(propId);
-    }
-
-
-    public void Set(string propName, object value)
-    {
-      int propId = MetadataLibrary.GetId(propName);
-      Set(propId, value);
     }
 
 
     public void Remove(string propName)
     {
-      int propId = MetadataLibrary.GetId(propName);
-      Remove(propId);
+      MetadataDefinition defn = MetadataLibrary.Lookup(propName);
+      Remove(defn);
     }
 
 
@@ -261,9 +258,9 @@ namespace HouseImaging
         {
           defn = new MetadataDefinition()
           {
-            Id = prop.Id,
+            Directory = "APP1",
+            Code = prop.Id,
             Name = "?",
-            Category = "Unknown Tags",
             Description = string.Empty,
             DataType = prop.Type != 0 ? (MetadataType)prop.Type : MetadataType.Undefined
           };
@@ -280,11 +277,12 @@ namespace HouseImaging
 
     public List<MetadataItem> GetAllDefinedMetadata()
     {
+      // Returns all metadata from the picture + other definitions from the library
       List<MetadataItem> result = GetList();
 
       foreach (MetadataDefinition defn in MetadataLibrary.GetList())
       {
-        MetadataItem item = result.FirstOrDefault(c => c.Definition.Id == defn.Id);
+        MetadataItem item = result.FirstOrDefault(c => c.Definition.GetId() == defn.GetId());
 
         if (item == null)
         {
@@ -304,11 +302,11 @@ namespace HouseImaging
         {
           foreach (MetadataDefinition defn in MetadataLibrary.GetList())
           {
-            string line = string.Format("{0:X4}, {0}, {1}, {2}, {3}, {4}",
-              defn.Id,
-              defn.Category,
+            string line = string.Format("{0}, {0:X4}, {1}, {2}, {3}, {4}",
+              defn.Directory,
+              defn.Code,
               defn.Name,
-              "type",
+              defn.DataType,
               defn.Description
               );
             writer.WriteLine(line);
@@ -324,7 +322,35 @@ namespace HouseImaging
 
       foreach (MetadataDefinition defn in MetadataLibrary.GetList())
       {
-        result.Add("0x" + defn.Id.ToString("X4"), defn);
+        object json;
+
+        string[] parts = defn.Name.Split('.');
+
+        if (parts.Length > 1)
+        {
+          json = new
+          {
+            Directory = defn.Directory,
+            Section = parts[0],
+            Code = defn.Code,
+            Name = parts[1],
+            Description = defn.Description,
+            DataType = defn.DataType
+          };
+        }
+        else
+        {
+          json = new
+          {
+            Directory = defn.Directory,
+            Code = defn.Code,
+            Name = defn.Name,
+            Description = defn.Description,
+            DataType = defn.DataType
+          };
+        }
+
+        result.Add(defn.GetId(), json);
       }
 
       File.WriteAllText(path, Json.Serialize(result));
@@ -341,7 +367,17 @@ namespace HouseImaging
     public MetadataItem(MetadataDefinition defn, object value = null)
     {
       Definition = defn;
-      Value = value;
+
+      // Handle unicode data here, because extracting from System Image object returns byte[] object
+      if ((value != null) && (defn.DataType == MetadataType.Unicode))
+      {
+        byte[] data = (byte[])value;
+        Value = Encoding.Unicode.GetString(data, 0, data.Length - 2);
+      }
+      else
+      {
+        Value = value;
+      }
     }
 
 
@@ -405,9 +441,18 @@ namespace HouseImaging
       {
         return new string((Value as string).Where(c => !char.IsControl(c)).ToArray());
       }
-      else
+      else if (Value.GetType().IsPrimitive)
       {
         return Value.ToString();
+      }
+      else if (Value is System.Windows.Media.Imaging.BitmapMetadataBlob)
+      {
+        byte[] data = (Value as System.Windows.Media.Imaging.BitmapMetadataBlob).GetBlobValue();
+        return "Blob = " + (data.Length > 0 ? StringTools.HexStringFromByteArray(data) : "Empty");
+      }
+      else
+      {
+        return Value.GetType().ToString();
       }
     }
 
@@ -428,8 +473,7 @@ namespace HouseImaging
           break;
         case MetadataType.Unicode:
           {
-            Value = new byte[0]; // TODO
-            // bytes = Encoding.Unicode.GetBytes(valueAsString + '\0');
+            Value = Encoding.Unicode.GetBytes(valueAsString + '\0');
           }
           break;
         case MetadataType.IntU16:
@@ -515,12 +559,67 @@ namespace HouseImaging
 
   public class MetadataDefinition
   {
-    public int Id { get; set; }
     public string Path { get; set; }
-    public string Category { get; set; }
+    public string Directory { get; set; }
+    public string Section { get; set; } = string.Empty;
+    public int Code { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }
     public MetadataType DataType { get; set; }
+
+    public string FullDir
+    {
+      get
+      {
+        if (string.IsNullOrEmpty(Section))
+        {
+          return this.Directory;
+        }
+        else
+        {
+          return this.Directory + "." + this.Section;
+        }
+      }
+    }
+
+    public string FullName
+    {
+      get
+      {
+        if (string.IsNullOrEmpty(Section))
+        {
+          return this.Name;
+        }
+        else
+        {
+          return this.Section + "." + this.Name;
+        }
+      }
+    }
+
+    public static string ComposeId(string directory, int code)
+    {
+      return directory.ToUpper() + "-" + code.ToString("X4");
+    }
+
+    public string GetId()
+    {
+      return ComposeId(Directory, Code);
+    }
+
+    public MetadataDefinition Copy()
+    {
+      return new MetadataDefinition
+      {
+        Path = this.Path,
+        Directory = this.Directory,
+        Section = this.Section,
+        Code = this.Code,
+        Name = this.Name,
+        Description = this.Description,
+        DataType = this.DataType
+      };
+    }
   }
 
 
@@ -530,25 +629,41 @@ namespace HouseImaging
 
     private static MetadataLibrary _instance = new MetadataLibrary();
 
-    private Dictionary<int, MetadataDefinition> fIdDefLookup;
+    private Dictionary<string, MetadataDefinition> fIdLookup;
 
-    private Dictionary<string, int> fNameIdLookup;
+    private Dictionary<string, MetadataDefinition> fNameLookup;
 
 
-    public static void AddDefinition(MetadataDefinition defn)
+    private void AddIdLookup(MetadataDefinition defn)
     {
-      if (_instance.fIdDefLookup.ContainsKey(defn.Id) == false)
+      try
       {
-        _instance.fIdDefLookup.Add(defn.Id, defn);
-        _instance.fNameIdLookup.Add(defn.Category + "." + defn.Name, defn.Id);
+        fIdLookup.Add(defn.GetId(), defn);
+      }
+      catch
+      {
+        // Already in dictionary
+      }
+    }
+
+
+    private void AddNameLookup(MetadataDefinition defn)
+    {
+      try
+      {
+        fNameLookup.Add(defn.FullName, defn);
+      }
+      catch
+      {
+        // Already in dictionary
       }
     }
 
 
     private MetadataLibrary()
     {
-      fIdDefLookup = new Dictionary<int, MetadataDefinition>();
-      fNameIdLookup = new Dictionary<string, int>();
+      fIdLookup = new Dictionary<string, MetadataDefinition>();
+      fNameLookup = new Dictionary<string, MetadataDefinition>();
 
       try
       {
@@ -558,46 +673,54 @@ namespace HouseImaging
           using (StreamReader reader = new StreamReader(stream))
           {
             string input = reader.ReadToEnd();
-            var json = Json.Deserialize<MetadataDefinition>(input);
+            fIdLookup = Json.Deserialize<MetadataDefinition>(input);
 
-            foreach (KeyValuePair<string, MetadataDefinition> kv in json)
+            foreach (KeyValuePair<string, MetadataDefinition> kv in fIdLookup)
             {
-              MetadataDefinition defn = kv.Value;
-
-              if (String.IsNullOrEmpty(defn.Category))
-              {
-                defn.Category = "General";
-              }
-
-              fIdDefLookup.Add(defn.Id, defn);
-              fNameIdLookup.Add(defn.Category + "." + defn.Name, defn.Id);
+              AddNameLookup(kv.Value);
             }
           }
         }
       }
       catch (Exception ex)
       {
-        fIdDefLookup.Clear();
-        fNameIdLookup.Clear();
+        fIdLookup.Clear();
+        fNameLookup.Clear();
       }
     }
 
 
-    public static MetadataDefinition Lookup(int id)
+    public static void AddDefinition(MetadataDefinition defn)
     {
-      return _instance.fIdDefLookup.ContainsKey(id) ? _instance.fIdDefLookup[id] : null;
+      _instance.AddIdLookup(defn);
+      _instance.AddNameLookup(defn);
     }
 
 
-    public static int GetId(string name)
+    public static MetadataDefinition Lookup(int code, string directory = "APP1")
     {
-      return _instance.fNameIdLookup.ContainsKey(name) ? _instance.fNameIdLookup[name] : -1;
+      try
+      {
+        string id = MetadataDefinition.ComposeId(directory, code);
+        return _instance.fIdLookup[id].Copy();
+      }
+      catch
+      {
+        return null; // Not found in dictionary
+      }
     }
 
 
-    public static MetadataDefinition Lookup(string name)
+    public static MetadataDefinition Lookup(string uniqueName)
     {
-      return Lookup(GetId(name));
+      try
+      {
+        return _instance.fNameLookup[uniqueName].Copy();
+      }
+      catch
+      {
+        return null; // Not found in dictionary
+      }
     }
 
 
@@ -605,7 +728,7 @@ namespace HouseImaging
     {
       List<MetadataDefinition> result = new List<MetadataDefinition>();
 
-      foreach (KeyValuePair<int, MetadataDefinition> kv in _instance.fIdDefLookup)
+      foreach (KeyValuePair<string, MetadataDefinition> kv in _instance.fIdLookup)
       {
         result.Add(kv.Value);
       }
