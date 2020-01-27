@@ -682,7 +682,7 @@ namespace HouseImaging
           }
         }
       }
-      catch (Exception ex)
+      catch (Exception)
       {
         fIdLookup.Clear();
         fNameLookup.Clear();
