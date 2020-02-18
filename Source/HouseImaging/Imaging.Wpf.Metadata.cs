@@ -85,12 +85,12 @@ namespace HouseImaging.Wpf
 
       if ((parts.Length > 1) && (parts[0] == "Thumbnail"))
       {
-        result = MetadataLibrary.Lookup(parts.Last());
+        result = MetadataLibrary.LookupName(parts.Last());
         result.Section = parts[0];
       }
       else
       {
-        result = MetadataLibrary.Lookup(propName);
+        result = MetadataLibrary.LookupName(propName);
       }
 
       return result;
@@ -226,7 +226,7 @@ namespace HouseImaging.Wpf
                   code = UInt16.Parse(p[0]);
 
                   // Try finding the definition in dictionary
-                  result = MetadataLibrary.Lookup(code, directory);
+                  result = MetadataLibrary.LookupCode(code, directory);
 
                   if (result != null)
                   {

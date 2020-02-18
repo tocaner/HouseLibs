@@ -170,7 +170,7 @@ namespace HouseImaging
 
     public bool Has(string propName)
     {
-      MetadataDefinition defn = MetadataLibrary.Lookup(propName);
+      MetadataDefinition defn = MetadataLibrary.LookupName(propName);
       return Has(defn);
     }
 
@@ -185,7 +185,7 @@ namespace HouseImaging
 
     public MetadataItem Read(string propName)
     {
-      MetadataDefinition defn = MetadataLibrary.Lookup(propName);
+      MetadataDefinition defn = MetadataLibrary.LookupName(propName);
       return Read(defn);
     }
 
@@ -209,7 +209,7 @@ namespace HouseImaging
 
     public void Set(string propName, object value)
     {
-      MetadataDefinition defn = MetadataLibrary.Lookup(propName);
+      MetadataDefinition defn = MetadataLibrary.LookupName(propName);
       Set(defn, value);
     }
 
@@ -228,7 +228,7 @@ namespace HouseImaging
 
     public void Remove(string propName)
     {
-      MetadataDefinition defn = MetadataLibrary.Lookup(propName);
+      MetadataDefinition defn = MetadataLibrary.LookupName(propName);
       Remove(defn);
     }
 
@@ -252,7 +252,7 @@ namespace HouseImaging
 
       foreach (PropertyItem prop in fSystemImage.PropertyItems)
       {
-        MetadataDefinition defn = MetadataLibrary.Lookup(prop.Id);
+        MetadataDefinition defn = MetadataLibrary.LookupCode(prop.Id);
 
         if (defn == null)
         {
@@ -360,7 +360,7 @@ namespace HouseImaging
 
   public class MetadataItem
   {
-    public MetadataDefinition Definition { get; set; }
+    public MetadataDefinition Definition { get; }
     public object Value { get; set; }
 
 
@@ -697,11 +697,10 @@ namespace HouseImaging
     }
 
 
-    public static MetadataDefinition Lookup(int code, string directory = "APP1")
+    public static MetadataDefinition LookupId(string id)
     {
       try
       {
-        string id = MetadataDefinition.ComposeId(directory, code);
         return _instance.fIdLookup[id].Copy();
       }
       catch
@@ -711,7 +710,14 @@ namespace HouseImaging
     }
 
 
-    public static MetadataDefinition Lookup(string uniqueName)
+    public static MetadataDefinition LookupCode(int code, string directory = "APP1")
+    {
+      string id = MetadataDefinition.ComposeId(directory, code);
+      return LookupId(id);
+    }
+
+
+    public static MetadataDefinition LookupName(string uniqueName)
     {
       try
       {
