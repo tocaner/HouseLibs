@@ -193,80 +193,82 @@ namespace HouseImaging.Wpf
       { "/app1/{ushort=0}/",                   "APP1",         ""          },
       { "/app1/{ushort=1}/",                   "APP1",         "THUMBNAIL" },
       { "/app1/",                              "APP1",         ""          },
-      { "/app0/",                              "APP0",         ""          },
-      { "/chrominance/",                       "JPEG",         ""          },
-      { "/luminance/",                         "JPEG",         ""          },
+      { "/app0/",                              "APP0",         ""          }
     };
 
 
     private MetadataDefinition GetMetadataDefinitionFromQuery(string path)
     {
-      MetadataDefinition result = null;
-
-      string name = "name?";
-      string directory = "directory?";
-      string section = "";
-      int code = -1;
-
-      switch (fImageInfo.GetImageFormat())
-      {
-        case ImageFormatEnum.Jpeg:
-          {
-            for (int i = 0; i < fTable.GetLength(0); i++)
-            {
-              if (path.StartsWith(fTable[i, 0]))
-              {
-                name = path.Substring(fTable[i, 0].Length);
-                directory = fTable[i, 1];
-                section = fTable[i, 2];
-
-                try
-                {
-                  string[] p = name.Split(new string[] { "{ushort=", "}" }, System.StringSplitOptions.RemoveEmptyEntries);
-                  code = UInt16.Parse(p[0]);
-
-                  // Try finding the definition in dictionary
-                  result = MetadataLibrary.LookupCode(code, directory);
-
-                  if (result != null)
-                  {
-                    result.Section = section;
-                  }
-                }
-                catch
-                {
-                  code = -1;
-                }
-                break;
-              }
-            }
-          }
-          break;
-
-        case ImageFormatEnum.Gif:
-          // TODO
-        case ImageFormatEnum.Tiff:
-          // TODO
-        case ImageFormatEnum.Png:
-          // TODO
-        default:
-          break;
-      }
+      MetadataDefinition result = MetadataLibrary.LookupPath(path);
 
       if (result == null)
       {
-        result = new MetadataDefinition()
+        string name = "name?";
+        string directory = "directory?";
+        string section = "";
+        int code = -1;
+
+        switch (fImageInfo.GetImageFormat())
         {
-          Code = code,
-          Section = section,
-          Name = name,
-          Directory = directory,
-          DataType = 0,
-          Description = string.Empty
-        };
+          case ImageFormatEnum.Jpeg:
+            {
+              for (int i = 0; i < fTable.GetLength(0); i++)
+              {
+                if (path.StartsWith(fTable[i, 0]))
+                {
+                  name = path.Substring(fTable[i, 0].Length);
+                  directory = fTable[i, 1];
+                  section = fTable[i, 2];
+
+                  try
+                  {
+                    string[] p = name.Split(new string[] { "{ushort=", "}" }, System.StringSplitOptions.RemoveEmptyEntries);
+                    code = UInt16.Parse(p[0]);
+
+                    // Try finding the definition in dictionary
+                    result = MetadataLibrary.LookupCode(code, directory);
+
+                    if (result != null)
+                    {
+                      result.Section = section;
+                    }
+                  }
+                  catch
+                  {
+                    code = -1;
+                  }
+                  break;
+                }
+              }
+            }
+            break;
+
+          case ImageFormatEnum.Gif:
+          // TODO
+          case ImageFormatEnum.Tiff:
+          // TODO
+          case ImageFormatEnum.Png:
+          // TODO
+          default:
+            break;
+        }
+
+        if (result == null)
+        {
+          result = new MetadataDefinition()
+          {
+            Code = code,
+            Section = section,
+            Name = name,
+            Directory = directory,
+            DataType = 0,
+            Description = string.Empty
+          };
+        }
+
+        result.Path = path;
       }
 
-      result.Path = path;
       return result;
     }
   }

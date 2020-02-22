@@ -322,33 +322,16 @@ namespace HouseImaging
 
       foreach (MetadataDefinition defn in MetadataLibrary.GetList())
       {
-        object json;
-
-        string[] parts = defn.Name.Split('.');
-
-        if (parts.Length > 1)
+        object json = new
         {
-          json = new
-          {
-            Directory = defn.Directory,
-            Section = parts[0],
-            Code = defn.Code,
-            Name = parts[1],
-            Description = defn.Description,
-            DataType = defn.DataType
-          };
-        }
-        else
-        {
-          json = new
-          {
-            Directory = defn.Directory,
-            Code = defn.Code,
-            Name = defn.Name,
-            Description = defn.Description,
-            DataType = defn.DataType
-          };
-        }
+          Directory = defn.Directory,
+          Section = defn.Section,
+          Code = defn.Code,
+          Path = defn.Path,
+          Name = defn.Name,
+          Description = defn.Description,
+          DataType = Enum.GetName(typeof(MetadataType), defn.DataType)
+        };
 
         result.Add(defn.GetId(), json);
       }
@@ -366,6 +349,29 @@ namespace HouseImaging
 
     public MetadataItem(MetadataDefinition defn, object value = null)
     {
+      // TODO: Test code, remove later...
+      if (value != null)
+      {
+        MetadataType check = GetMetadataTypeOf(value);
+        if (check != defn.DataType)
+        {
+          bool ok = false;
+
+          if(check == MetadataType.Undefined)
+          {
+            if (defn.DataType == MetadataType.Unicode)
+            {
+              ok = true;
+            }
+          }
+
+          if (ok == false)
+          {
+            check = GetMetadataTypeOf(value);
+          }
+        }
+      }
+
       Definition = defn;
 
       // Handle unicode data here, because extracting from System Image object returns byte[] object
@@ -377,6 +383,55 @@ namespace HouseImaging
       else
       {
         Value = value;
+      }
+    }
+
+
+    public static MetadataType GetMetadataTypeOf(object value)
+    {
+      if (value == null)
+      {
+        return MetadataType.None;
+      }
+      else if (value is Int64)
+      {
+        return MetadataType.FracS32;
+      }
+      else if (value is UInt64)
+      {
+        return MetadataType.FracU32;
+      }
+      else if (value is byte[])
+      {
+        return MetadataType.Undefined;
+      }
+      else if ((value is UInt16) || (value is UInt16[]))
+      {
+        return MetadataType.IntU16;
+      }
+      else if ((value is UInt32) || (value is UInt32[]))
+      {
+        return MetadataType.IntU32;
+      }
+      else if ((value is Int32) || (value is Int32[]))
+      {
+        return MetadataType.IntS32;
+      }
+      else if (value is string)
+      {
+        return MetadataType.String;
+      }
+      else if (value is byte)
+      {
+        return MetadataType.Byte;
+      }
+      else if (value is System.Windows.Media.Imaging.BitmapMetadataBlob)
+      {
+        return MetadataType.Undefined;
+      }
+      else
+      {
+        return MetadataType.None;
       }
     }
 
@@ -529,6 +584,10 @@ namespace HouseImaging
           }
           break;
         case MetadataType.Byte:
+          {
+            Value = byte.Parse(valueAsString);
+          }
+          break;
         case MetadataType.Undefined:
         default:
           {
@@ -542,6 +601,7 @@ namespace HouseImaging
 
   public enum MetadataType
   {
+    None = 0,
     Byte = 1,
     Unicode = 1 | 0x100,
     String = 2,          // Null terminated
@@ -727,6 +787,23 @@ namespace HouseImaging
       {
         return null; // Not found in dictionary
       }
+    }
+
+
+    public static MetadataDefinition LookupPath(string path)
+    {
+      MetadataDefinition result = null;
+
+      foreach (KeyValuePair<string, MetadataDefinition> kv in _instance.fIdLookup)
+      {
+        MetadataDefinition defn = kv.Value;
+        if (defn.Path == path)
+        {
+          result = defn;
+        }
+      }
+
+      return result;
     }
 
 
