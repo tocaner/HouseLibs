@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Windows.Media;
 using Fingerprint = HouseUtils.Checksum.Fingerprint;
 using Image = System.Drawing.Image;
 using ImageFormat = System.Drawing.Imaging.ImageFormat;
-using System.Windows.Media;
+using HouseImaging.Metadata;
 
 
 namespace HouseImaging

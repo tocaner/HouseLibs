@@ -9,7 +9,7 @@ using System.Text;
 using HouseUtils;
 
 
-namespace HouseImaging
+namespace HouseImaging.Metadata
 {
   public class MetadataPortal
   {
