@@ -86,7 +86,14 @@ namespace HouseImaging.Wpf
 
     public ImageFormatEnum GetImageFormat()
     {
-      return ImageFormat.FromDecoder((fSystemImage as BitmapFrame).Decoder);
+      try
+      {
+        return ImageFormat.FromDecoder((fSystemImage as BitmapFrame).Decoder);
+      }
+      catch
+      {
+        return ImageFormatEnum.Unknown;
+      }
     }
 
 

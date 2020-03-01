@@ -18,7 +18,7 @@ namespace HouseImaging.Wpf
     {
       fImageInfo = imageInfo;
       BitmapMetadata md = imageInfo.GetSystemImageSource().Metadata as BitmapMetadata;
-      fNewMetadata = md != null ? md.Clone() : new BitmapMetadata(imageInfo.GetImageFormatDescription());
+      fNewMetadata = md != null ? md.Clone() : null;
     }
 
 
@@ -94,8 +94,15 @@ namespace HouseImaging.Wpf
 
     public bool Has(MetadataDefinition defn)
     {
-      string query = Query(defn);
-      return fNewMetadata.ContainsQuery(query);
+      if (fNewMetadata != null)
+      {
+        string query = Query(defn);
+        return fNewMetadata.ContainsQuery(query);
+      }
+      else
+      {
+        return false;
+      }
     }
 
 
@@ -107,8 +114,11 @@ namespace HouseImaging.Wpf
 
     public void Remove(MetadataDefinition defn)
     {
-      string query = Query(defn);
-      fNewMetadata.RemoveQuery(query);
+      if (fNewMetadata != null)
+      {
+        string query = Query(defn);
+        fNewMetadata.RemoveQuery(query);
+      }
     }
 
 
@@ -120,9 +130,16 @@ namespace HouseImaging.Wpf
 
     public MetadataItem Read(MetadataDefinition defn)
     {
-      string query = Query(defn);
-      object value = fNewMetadata.GetQuery(query);
-      return new MetadataItem(defn, value);
+      if (fNewMetadata != null)
+      {
+        string query = Query(defn);
+        object value = fNewMetadata.GetQuery(query);
+        return new MetadataItem(defn, value);
+      }
+      else
+      {
+        return new MetadataItem(defn, null);
+      }
     }
 
 
@@ -134,8 +151,11 @@ namespace HouseImaging.Wpf
 
     public void Set(MetadataDefinition defn, object value)
     {
-      string query = Query(defn);
-      fNewMetadata.SetQuery(query, value);
+      if (fNewMetadata != null)
+      {
+        string query = Query(defn);
+        fNewMetadata.SetQuery(query, value);
+      }
     }
 
 
@@ -148,7 +168,12 @@ namespace HouseImaging.Wpf
     public List<MetadataItem> GetList()
     {
       List<MetadataItem> result = new List<MetadataItem>();
-      CaptureMetadata(result, this.fNewMetadata, "");
+
+      if (fNewMetadata != null)
+      {
+        CaptureMetadata(result, this.fNewMetadata, "");
+      }
+
       return result;
     }
 
