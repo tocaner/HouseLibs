@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace NativeLibs
+namespace Utils.NativeLibs
 {
-  public class LibGdi32
+  public class Gdi32
   {
     [DllImport("gdi32.dll")]
     public static extern bool DeleteObject(IntPtr hObject);

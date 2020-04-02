@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NativeLibs = Utils.NativeLibs;
 
 
 namespace HouseImaging
@@ -24,7 +25,7 @@ namespace HouseImaging
       }
       finally
       {
-        NativeLibs.LibGdi32.DeleteObject(hBitmap);
+        NativeLibs.Gdi32.DeleteObject(hBitmap);
       }
 
       return result;

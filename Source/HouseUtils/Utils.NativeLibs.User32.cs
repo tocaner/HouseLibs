@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace NativeLibs
+namespace Utils.NativeLibs
 {
-  public class LibUser32
+  public class User32
   {
     [DllImport("user32.dll", ExactSpelling = true)]
     public static extern int GetMessagePos();

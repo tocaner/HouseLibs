@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HouseUtils", "HouseUtils\Ho
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HouseControls", "HouseControls\HouseControls.csproj", "{F39DF7CC-9F9F-4AEE-9763-E6C997FF3E4F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NativeLibs", "NativeLibs\NativeLibs.csproj", "{CB5A53E6-F079-4702-A627-0D2C7BCFFFFA}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HouseImaging", "HouseImaging\HouseImaging.csproj", "{8D2146A2-1213-4B70-8BDC-E73C298B2C72}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestThreads", "TestThreads\TestThreads.csproj", "{1C1C1FE3-DAB4-4568-8E19-FD1105DC5F77}"
@@ -27,10 +25,6 @@ Global
 		{F39DF7CC-9F9F-4AEE-9763-E6C997FF3E4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F39DF7CC-9F9F-4AEE-9763-E6C997FF3E4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F39DF7CC-9F9F-4AEE-9763-E6C997FF3E4F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CB5A53E6-F079-4702-A627-0D2C7BCFFFFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CB5A53E6-F079-4702-A627-0D2C7BCFFFFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CB5A53E6-F079-4702-A627-0D2C7BCFFFFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CB5A53E6-F079-4702-A627-0D2C7BCFFFFA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8D2146A2-1213-4B70-8BDC-E73C298B2C72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8D2146A2-1213-4B70-8BDC-E73C298B2C72}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D2146A2-1213-4B70-8BDC-E73C298B2C72}.Release|Any CPU.ActiveCfg = Release|Any CPU

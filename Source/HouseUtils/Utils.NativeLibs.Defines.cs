@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace NativeLibs
+namespace Utils.NativeLibs
 {
-  public class LibDefines
+  public class Defines
   {
     [StructLayout(LayoutKind.Sequential)]
     public struct RECT

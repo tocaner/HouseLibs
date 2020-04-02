@@ -8,7 +8,7 @@ using System.Runtime.ConstrainedExecution;
 using Microsoft.Win32.SafeHandles;
 
 
-namespace NativeLibs
+namespace Utils.NativeLibs
 {
   [SecurityPermission(SecurityAction.InheritanceDemand, UnmanagedCode = true)]
   [SecurityPermission(SecurityAction.Demand, UnmanagedCode = true)]
@@ -22,7 +22,7 @@ namespace NativeLibs
     [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
     protected override bool ReleaseHandle()
     {
-      return LibKernel32.CloseHandle(handle);
+      return Kernel32.CloseHandle(handle);
     }
   }
 
@@ -35,12 +35,12 @@ namespace NativeLibs
 
     protected override bool ReleaseHandle()
     {
-      return LibKernel32.UnmapViewOfFile(handle);
+      return Kernel32.UnmapViewOfFile(handle);
     }
   }
 
   
-  public class LibKernel32
+  public class Kernel32
   {
     [DllImport("kernel32.dll", ExactSpelling = true)]
     public static extern IntPtr GlobalAlloc(int flags, int size);

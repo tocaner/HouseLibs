@@ -64,10 +64,6 @@
       <Project>{e9c57c07-1587-4d1a-b800-5e73ce5e0beb}</Project>
       <Name>HouseUtils</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NativeLibs\NativeLibs.csproj">
-      <Project>{cb5a53e6-f079-4702-a627-0d2c7bcffffa}</Project>
-      <Name>NativeLibs</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Dummy.jpg" />
