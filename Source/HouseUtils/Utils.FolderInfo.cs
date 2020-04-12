@@ -142,5 +142,19 @@ namespace HouseUtils
     {
       return Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
     }
+
+
+    static public void EnsurePath(string path, bool isFile = false)
+    {
+      if (isFile)
+      {
+        path = Path.GetDirectoryName(path);
+      }
+
+      if (Directory.Exists(path) == false)
+      {
+        Directory.CreateDirectory(path);
+      }
+    }
   }
 }
