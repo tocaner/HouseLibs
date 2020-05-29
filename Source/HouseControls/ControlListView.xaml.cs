@@ -183,6 +183,26 @@ namespace HouseControls
               }
             }));
 
+
+    // MultiSelect ---------------------------------------------------------------
+    public bool MultiSelect
+    {
+      get { return (bool)GetValue(MultiSelectProperty); }
+      set { SetValue(MultiSelectProperty, value); }
+    }
+
+    private static readonly DependencyProperty MultiSelectProperty =
+        DependencyProperty.Register("MultiSelect", typeof(bool), typeof(ControlListView),
+          new PropertyMetadata(true,
+            (DependencyObject sender, DependencyPropertyChangedEventArgs e) =>
+            {
+              ControlListView c = sender as ControlListView;
+              if (c != null)
+              {
+                c.lv.SelectionMode = c.MultiSelect ? SelectionMode.Extended : SelectionMode.Single;
+              }
+            }));
+
     #endregion DependencyProperties
 
 
@@ -226,30 +246,66 @@ namespace HouseControls
     {
       ViewBase result = TryFindResource(str) as ViewBase;
 
-      if (str == "GridView")
+      if (str == "ListView")
+      {
+        InitListView(result as GridView);
+      }
+      else if (str == "GridView")
       {
         InitGridView(result as GridView);
       }
+      else
+      { }
 
       return result;
     }
 
 
-    private void InitGridView(GridView result)
+    private void InitListView(GridView listView)
     {
+      listView.Columns.Clear();
+
+      for (int i = 0; i < ColumnNames.Length; i++)
+      {
+        string columnName = ColumnNames[i];
+        
+        listView.Columns.Add(new GridViewColumn
+        {
+          Header = columnName,
+          DisplayMemberBinding = new Binding(columnName)
+        });
+      }
+    }
+
+
+    private void InitGridView(GridView gridView)
+    {
+      // Static columns
+      GridViewColumn col0 = gridView.Columns[0];
+      GridViewColumn col1 = gridView.Columns[1];
+
+      gridView.Columns.Clear();
+      gridView.Columns.Add(col0);
+      gridView.Columns.Add(col1);
+
       for (int i = 0; i < ColumnNames.Length; i++)
       {
         string columnName = ColumnNames[i];
 
-        if (i < result.Columns.Count)
+        if (i == 0)
         {
-          // Static columns: Checkbox and Item (Image/Title)
-          result.Columns[i].Header = columnName;
+          // Checkbox column, no change
+          col0.Header = columnName;
+        }
+        else if (i == 1)
+        {
+          // Icon + name column
+          col1.Header = columnName;
         }
         else
         {
-          // Rest of the colums: Properties
-          result.Columns.Add(new GridViewColumn
+          // Rest of the columns: Properties
+          gridView.Columns.Add(new GridViewColumn
           {
             Header = columnName,
             DisplayMemberBinding = new Binding(columnName)

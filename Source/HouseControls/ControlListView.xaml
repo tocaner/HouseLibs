@@ -89,9 +89,13 @@
       </GridViewColumn>
     </GridView>
 
+    <GridView x:Key="ListView">
+    </GridView>
+    
   </UserControl.Resources>
   <Grid>
-    <ListView Name="lv"
+    <ListView Name="lv" 
+              BorderThickness="0" BorderBrush="Transparent"
               SelectionChanged="ListView_SelectionChanged" 
               MouseDoubleClick="ListView_MouseDoubleClick">
     </ListView>
