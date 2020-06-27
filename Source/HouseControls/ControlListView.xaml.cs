@@ -315,26 +315,27 @@ namespace HouseControls
     }
 
 
-    private object fCurrentItem;
+    public object CurrentItem { get; private set; }
+
 
     private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
       if (lv.SelectedItems.Count > 0)
       {
-        fCurrentItem = lv.SelectedItems[0];
+        CurrentItem = lv.SelectedItems[0];
       }
       else
       {
-        fCurrentItem = null;
+        CurrentItem = null;
       }
 
-      Raise_SelectionChanged(fCurrentItem);
+      Raise_SelectionChanged(CurrentItem);
     }
 
 
     private void ListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
-      Raise_ItemInvoked(fCurrentItem);
+      Raise_ItemInvoked(CurrentItem);
     }
   }
 
