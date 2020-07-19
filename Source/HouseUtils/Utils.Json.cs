@@ -38,6 +38,14 @@ namespace HouseUtils
     }
 
 
+    public static object DeserializeToType(string text, Type targetType)
+    {
+      var ser = new JavaScriptSerializer();
+      var dict = ser.Deserialize<dynamic>(text);
+      return ser.ConvertToType(dict, targetType);
+    }
+
+
     public static T Deserialize2<T>(string text)
     {
       var ser = new JavaScriptSerializer();
