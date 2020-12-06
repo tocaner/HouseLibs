@@ -10,37 +10,45 @@ namespace HouseUtils
 {
   public class Json
   {
+    private static JavaScriptSerializer CreateSerializer()
+    {
+      JavaScriptSerializer ser = new JavaScriptSerializer();
+      ser.MaxJsonLength = 4 * 1024 * 1024;
+      return ser;
+    }
+
+
     public static string Serialize(Dictionary<string, object> data)
     {
-      var ser = new JavaScriptSerializer();
+      var ser = Json.CreateSerializer();
       return Json.FormatOutput(ser.Serialize(data));
     }
 
 
     public static string Serialize2(object data)
     {
-      var ser = new JavaScriptSerializer();
+      var ser = Json.CreateSerializer();
       return Json.FormatOutput(ser.Serialize(data));
     }
 
 
     public static Dictionary<string, T> Deserialize<T>(string text)
     {
-      var ser = new JavaScriptSerializer();
+      var ser = Json.CreateSerializer();
       return ser.Deserialize<Dictionary<string, T>>(text);
     }
 
 
     public static Dictionary<string, object> Deserialize(string text)
     {
-      var ser = new JavaScriptSerializer();
+      var ser = Json.CreateSerializer();
       return ser.Deserialize<dynamic>(text);
     }
 
 
     public static object DeserializeToType(string text, Type targetType)
     {
-      var ser = new JavaScriptSerializer();
+      var ser = Json.CreateSerializer();
       var dict = ser.Deserialize<dynamic>(text);
       return ser.ConvertToType(dict, targetType);
     }
@@ -48,7 +56,7 @@ namespace HouseUtils
 
     public static T Deserialize2<T>(string text)
     {
-      var ser = new JavaScriptSerializer();
+      var ser = Json.CreateSerializer();
       return ser.Deserialize<T>(text);
     }
 
@@ -216,7 +224,7 @@ namespace HouseUtils
 
     public static Dictionary<string, object> ToDictionary(object data)
     {
-      var ser = new JavaScriptSerializer();
+      var ser = Json.CreateSerializer();
       string json = ser.Serialize(data);
       return ser.Deserialize<dynamic>(json);
     }
