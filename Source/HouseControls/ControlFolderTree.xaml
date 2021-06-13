@@ -14,7 +14,7 @@
         <BitmapImage x:Key="Folder" UriSource="Icons/Icons8/Folder-96.png"/>
       </ResourceDictionary>
     </Grid.Resources>
-    <TreeView Grid.Column="0" ItemsSource="{Binding RootItems}" SelectedItemChanged="TreeView_SelectedItemChanged">
+    <TreeView Grid.Column="0" BorderThickness="0" ItemsSource="{Binding RootItems}" SelectedItemChanged="TreeView_SelectedItemChanged">
       <TreeView.Resources>
         <HierarchicalDataTemplate DataType="{x:Type local:TreeViewComputerItem}" ItemsSource="{Binding Items}">
           <StackPanel Orientation="Horizontal">
